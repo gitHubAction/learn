@@ -13,9 +13,9 @@ import java.io.IOException;
  */
 public class Producer {
 
-    private final static String QUEUE_NAME = "q_test_01";
+    private final static String QUEUE_NAME = "test_queue_work";
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         //获取mq连接
         Connection connection = ConnectionUtil.getContection();
         //创建channel信道
@@ -28,11 +28,12 @@ public class Producer {
                 false,//是否自动删除
                 null);//其他参数
         // 消息内容
-        for (int i = 0; i < 200; i++) {
+        for (int i = 0; i < 100; i++) {
             String message = "Hello World!";
             message+=i;
             channel.basicPublish("", QUEUE_NAME, null, message.getBytes());
             System.out.println(" [x] Sent '" + message + "'");
+            Thread.sleep(i*10);
         }
         //关闭通道和连接
         channel.close();

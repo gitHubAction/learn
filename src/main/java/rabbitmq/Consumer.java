@@ -3,6 +3,7 @@ package rabbitmq;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.QueueingConsumer;
+import thread.T;
 
 import java.io.IOException;
 
@@ -27,16 +28,17 @@ public class Consumer {
                 false,//是否为排他连接
                 false,//是否自动删除
                 null);//其他参数
-
+        channel.basicQos(1);
         //定义消费者
         QueueingConsumer consumer = new QueueingConsumer(channel);
         //消费监听对应的队列
-        channel.basicConsume(QUEUE_NAME,true,consumer);
+        channel.basicConsume(QUEUE_NAME,false,consumer);
         while (true){
             QueueingConsumer.Delivery delivery = consumer.nextDelivery();
             String message = new String(delivery.getBody());
             System.out.println(" [x] Received '" + message + "'");
-//            channel.basicAck(delivery.getEnvelope().getDeliveryTag(),false);
+            Thread.sleep(100);
+            channel.basicAck(delivery.getEnvelope().getDeliveryTag(),false);
         }
     }
 }

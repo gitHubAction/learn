@@ -28,15 +28,17 @@ public class Consumer1 {
                 false,//是否自动删除
                 null);//其他参数
 
+        channel.basicQos(1);
         //定义消费者
         QueueingConsumer consumer = new QueueingConsumer(channel);
         //消费监听对应的队列
-        channel.basicConsume(QUEUE_NAME,true,consumer);
+        channel.basicConsume(QUEUE_NAME,false,consumer);
         while (true){
             QueueingConsumer.Delivery delivery = consumer.nextDelivery();
             String message = new String(delivery.getBody());
             System.out.println(" [x] Received 1'" + message + "'");
-//            channel.basicAck(delivery.getEnvelope().getDeliveryTag(),false);
+            Thread.sleep(300);
+            channel.basicAck(delivery.getEnvelope().getDeliveryTag(),false);
         }
     }
 }
