@@ -10,7 +10,7 @@ import java.io.IOException;
  * @Author: zhangsh
  * @Date: 2020/2/26 15:52
  * @Version 1.0
- * Description
+ * Description 消费者1
  */
 public class Consumer1 {
     private final static String QUEUE_NAME = "q_test_01";
