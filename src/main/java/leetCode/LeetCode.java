@@ -1,3 +1,5 @@
+package leetCode;
+
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -8,7 +10,7 @@ import java.util.*;
  * @Version 1.0 链表
  * Description
  */
-public class LeeCode {
+public class LeetCode {
     public int[] twoSum(int[] nums, int target) {
         int[] result = new int[2];
         int len = nums.length;
@@ -68,8 +70,9 @@ public class LeeCode {
 
     public static void main(String[] args) {
 
+        System.out.println(maxSub("abccabdc"));
 //        sortedSquares(new int[]{-4,-1,0,3,10});
-        /*int[] ints = new LeeCode().twoSum(new int[]{3,3}, 6);
+        /*int[] ints = new LeetCode().twoSum(new int[]{3,3}, 6);
         for (int i:ints) {
             System.out.println(i);
         }*/
@@ -275,12 +278,13 @@ public class LeeCode {
      */
     public static int maxSub(String s){
         int n = s.length();
-        int i = 0;//窗口其实位置
+        int i = 0;//窗口起始位置
         int j = 0;//窗口末位位置
         int result = 0;//结果
         Set window = new HashSet();
         while (i< n && j < n){
             if(window.contains(s.charAt(j))){
+                //删除掉窗口的内容，直到重复的字符串位置
                 window.remove(s.charAt(i));
                 i++;
             }else{

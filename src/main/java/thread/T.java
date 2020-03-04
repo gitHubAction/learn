@@ -25,6 +25,8 @@ public class T {
 
         thread.start();
 
+
+
         while (true){
             try {
                 System.out.println(System.currentTimeMillis()+"  "+Thread.currentThread().getName()+"sleep前---循环体");

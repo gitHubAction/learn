@@ -1,5 +1,15 @@
-import java.util.HashMap;
-import java.util.Map;
+import sun.misc.SharedSecrets;
+
+import java.io.IOException;
+import java.io.InvalidObjectException;
+import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * @Author: zhangsh
@@ -11,7 +21,7 @@ public class HashMapTest {
 
 
     public static void main(String[] args) {
-        HashMap map = new HashMap();
+       /* HashMap map = new HashMap();
         for (int i = 0; i < 10; i++) {
             A a = new A();
             B b = new B();
@@ -20,10 +30,19 @@ public class HashMapTest {
         }
         for (Object o:map.keySet()) {
             System.out.println(map.get(o));
-        }
+        }*/
+        System.out.println(tableSizeFor(65));
     }
 
-
+    static int tableSizeFor(int cap) {
+        int n = cap - 1;
+        n |= n >>> 1;
+        n |= n >>> 2;
+        n |= n >>> 4;
+        n |= n >>> 8;
+        n |= n >>> 16;
+        return (n < 0) ? 1 : (n >=  1 << 30) ? 1 << 30 : n + 1;
+    }
 
     static class A{
         @Override

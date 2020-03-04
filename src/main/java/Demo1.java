@@ -79,9 +79,10 @@ public class Demo1 {
     }
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        long starTime = System.currentTimeMillis();
-        Map<String, Object> map = new Demo1().goodsDetail(1L);
-        System.out.println(map);
-        System.out.println("耗时(ms):" + (System.currentTimeMillis() - starTime));
+//        long starTime = System.currentTimeMillis();
+//        Map<String, Object> map = new Demo1().goodsDetail(1L);
+//        System.out.println(map);
+//        System.out.println("耗时(ms):" + (System.currentTimeMillis() - starTime));
+        System.out.println(1<<1);
     }
 }
