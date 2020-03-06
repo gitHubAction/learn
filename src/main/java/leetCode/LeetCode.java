@@ -11,6 +11,162 @@ import java.util.*;
  * Description
  */
 public class LeetCode {
+
+
+    public static int orangesRotting(int[][] grid){
+        //腐烂的橘子
+        Queue<int[]> queue = new LinkedList<int[]>();
+        //未腐烂的橘子的个数
+        int good = 0;
+        //寻找所有的腐烂的橘子
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                if(grid[i][j] == 2)queue.add(new int[]{i,j});
+                if(grid[i][j] == 1)good++;
+            }
+        }
+        int minitues = 0;
+        while (queue.size()>0 && good>0){
+            minitues++;
+            for (int i = 0; i < queue.size(); i++) {
+                //去除腐烂的橘子
+                int[] poll = queue.poll();
+                //腐烂上下左右
+                //上
+                if(poll[1] - 1 >= 0 && grid[poll[0]][poll[1]-1] == 1){
+                    grid[poll[0]][poll[1]-1] = 2;
+                    good--;
+                    queue.add(new int[]{poll[0],poll[1]-1});
+                }
+                //下
+                if(poll[1] + 1 < grid.length && grid[poll[0]][poll[1]+1] == 1){
+                    grid[poll[0]][poll[1]+1] = 2;
+                    good--;
+                    queue.add(new int[]{poll[0],poll[1]+1});
+                }
+                //左
+                if(poll[0] - 1 >= 0 && grid[poll[0]-1][poll[1]] == 1){
+                    grid[poll[0]-1][poll[1]] = 2;
+                    good--;
+                    queue.add(new int[]{poll[0]-1,poll[1]});
+                }
+                //右
+                if(poll[0] + 1 < grid[0].length && grid[poll[0]+1][poll[1]] == 1){
+                    grid[poll[0]+1][poll[1]] = 2;
+                    good--;
+                    queue.add(new int[]{poll[0]+1,poll[1]});
+                }
+            }
+        }
+
+        if(good > 0) return  -1;
+        return minitues;
+
+    }
+
+
+    /**
+     * 寻找两个数组的中位数
+     * @param nums1
+     * @param nums2
+     * @return
+     */
+    public static double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int result[] = new int[nums1.length+nums2.length];
+        //归并排序
+        for (int index = 0,i = 0 , j = 0; index < result.length; index++) {
+            if(i >= nums1.length){
+                result[index] = nums2[j++];
+            }else if(j >= nums2.length){
+                result[index] = nums1[i++];
+            }else if(nums1[i] > nums2[j]){
+                result[index] = nums2[j++];
+            }else {
+                result[index] = nums1[i++];
+            }
+        }
+        return result.length%2 != 0 ?
+                result[result.length/2] :
+                (double)(result[result.length/2 -1] + result[result.length/2])/2;
+    }
+
+
+    class ListNode{
+        int val;
+        ListNode next;
+        ListNode(int x) { val = x; }
+    }
+
+    /**
+     * 两数相加
+     * @param l1
+     * @param l2
+     * @return
+     */
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode tempNode = new ListNode(0);
+        ListNode cur = tempNode;
+        int jinwei = 0;
+        while (l1 != null || l2 != null){
+            int p = l1 != null ? l1.val : 0;
+            int q = l2 != null ? l2.val : 0;
+            int sum = p + q + jinwei;
+            //取商
+            jinwei = sum/10;
+            //取余数
+            int yushu = sum%10;
+            cur.next = new ListNode(yushu);
+            cur = cur.next;
+            if(l1!= null)l1 = l1.next;
+            if(l2!= null)l2 = l2.next;
+        }
+
+        if(jinwei > 0){
+            cur.next = new ListNode(jinwei);
+        }
+        return tempNode.next;
+    }
+
+
+    /**
+     * 分糖果
+     * @param candies
+     * @param num_people
+     * @return
+     */
+    public static int[] distributeCandies(int candies, int num_people) {
+        int[] result = new int[num_people];
+        int first = 1;//记录改轮要分几个糖果
+        //糖果大于0才分配
+        while (candies > 0){
+            //遍历小朋友分糖果
+            for (int i = 0; i < result.length; i++) {
+                //糖果数是否够分
+                if(candies - first > 0){
+                    //减掉分掉的糖果
+                    candies-=first;
+                    //对应小朋友手中的糖果数
+                    result[i] = result[i]+first++;
+                }else {
+                    //不够分，直接把所有糖果给改小朋友
+                    result[i] = result[i]+(candies);
+                    //糖果数置0
+                    candies = 0;
+                    //跳出循环
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+
+    /**
+     * 两数之和等于目标数
+     * @param nums
+     * @param target
+     * @return
+     */
     public int[] twoSum(int[] nums, int target) {
         int[] result = new int[2];
         int len = nums.length;
@@ -70,7 +226,12 @@ public class LeetCode {
 
     public static void main(String[] args) {
 
-        System.out.println(maxSub("abccabdc"));
+        int[][] arr = {{2,1,1},{1,1,0},{0,1,1}};
+        System.out.println(orangesRotting(arr));
+//        findMedianSortedArrays(new int[]{1,3,4},new int[]{1,3,4,5,7});
+
+//        distributeCandies(60,4);
+//        System.out.println(maxSub("abccabdc"));
 //        sortedSquares(new int[]{-4,-1,0,3,10});
         /*int[] ints = new LeetCode().twoSum(new int[]{3,3}, 6);
         for (int i:ints) {
@@ -214,9 +375,10 @@ public class LeetCode {
             else if (j >= right.length)
                 result[index] = left[i++];
             else if (left[i] > right[j])
-                result[index] = right[j++];
-            else
+//                result[index] = right[j++];
                 result[index] = left[i++];
+            else
+                result[index] = right[j++];
         }
         return result;
     }
