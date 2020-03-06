@@ -19,29 +19,28 @@ public class LeetCode {
      * @return
      */
     public static int[][] findContinuousSequence1(int target) {
-        int start = 1;
-        int end = 1;
-        List<int[]> result = new ArrayList<>();
-        int cnt = 0;
-        //如果窗口左边界小于等于目标值的一半
-        while (end <= target /2){
-            if(cnt > target){
+        int left = 1,right = 1,sum = 0;
+        List<int[]> res = new ArrayList<>();
+
+        while (left <= target/2){
+            if(sum>target){
                 //左边界右移
-                cnt -= end++;
-            }else if (cnt < target){
+                sum -= left++;
+            }else if(sum < target){
                 //右边界右移
-                cnt += start++;
-            }else {
-                int [] temp = new int[start-end];
-                for (int i = end; i < start; i++) {
-                    temp[i-end] = i;
+                sum += right++;
+            }else{
+                //添加结果
+                int[] temp = new int[right-left];
+                for(int i = left;i<right;i++){
+                    temp[i-left] = i;
                 }
-                result.add(temp);
-                //窗口左边界向右移动
-                cnt -= end++;
+                res.add(temp);
+                //左边界右移做下一轮循环
+                sum -= left++;
             }
         }
-        return result.toArray(new int[result.size()][]);
+        return res.toArray(new int[res.size()][]);
     }
 
     public static int[][] findContinuousSequence(int target) {
@@ -263,7 +262,8 @@ public class LeetCode {
      * @param num
      * @return
      */
-    public static List convertZ(String s,int num){
+    public static String convertZ(String s,int num){
+        if(num == 1) return s;
         //初始化行数集合
         List<StringBuilder> strz = new ArrayList<>();
         for (int i = 0; i< Math.min(s.length(),num);i++) {
@@ -277,7 +277,7 @@ public class LeetCode {
             if(curRow == num-1 || curRow == 0) goDown = !goDown;
             curRow += goDown ? 1:-1;
         }
-        return strz;
+        return strz.toString();
     }
 
     public static void main(String[] args) {
