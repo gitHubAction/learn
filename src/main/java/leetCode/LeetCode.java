@@ -13,6 +13,60 @@ import java.util.*;
 public class LeetCode {
 
 
+    /**
+     * 窗口法求
+     * @param target
+     * @return
+     */
+    public static int[][] findContinuousSequence1(int target) {
+        int start = 1;
+        int end = 1;
+        List<int[]> result = new ArrayList<>();
+        int cnt = 0;
+        //如果窗口左边界小于等于目标值的一半
+        while (end <= target /2){
+            if(cnt > target){
+                //左边界右移
+                cnt -= end++;
+            }else if (cnt < target){
+                //右边界右移
+                cnt += start++;
+            }else {
+                int [] temp = new int[start-end];
+                for (int i = end; i < start; i++) {
+                    temp[i-end] = i;
+                }
+                result.add(temp);
+                //窗口左边界向右移动
+                cnt -= end++;
+            }
+        }
+        return result.toArray(new int[result.size()][]);
+    }
+
+    public static int[][] findContinuousSequence(int target) {
+        Map<Integer,Integer> map = new HashMap<>();
+        for (int a = 1; a < target; a++) {
+            for (int n = 2; n < target; n++) {
+                if(2*a*n + n * n -n == 2*target)map.put(a,n);
+                if(2*a*n + n*n -n > 2*target)break;
+            }
+        }
+
+        int size = map.keySet().size();
+        int[][] result = new int[size][];
+        int i = 0;
+        for (int a : map.keySet()) {
+            int[] temp = new int[map.get(a)];
+            for (int j = 0; j < map.get(a); j++) {
+                temp[j] = a+j;
+            }
+            result[i++] = temp;
+        }
+        return result;
+    }
+
+
     public static int orangesRotting(int[][] grid){
         //腐烂的橘子
         Queue<int[]> queue = new LinkedList<int[]>();
@@ -75,11 +129,13 @@ public class LeetCode {
         int result[] = new int[nums1.length+nums2.length];
         //归并排序
         for (int index = 0,i = 0 , j = 0; index < result.length; index++) {
+            //先保证两个数组不越界
             if(i >= nums1.length){
                 result[index] = nums2[j++];
             }else if(j >= nums2.length){
                 result[index] = nums1[i++];
             }else if(nums1[i] > nums2[j]){
+                //按照从小到大的顺序
                 result[index] = nums2[j++];
             }else {
                 result[index] = nums1[i++];
@@ -226,8 +282,10 @@ public class LeetCode {
 
     public static void main(String[] args) {
 
-        int[][] arr = {{2,1,1},{1,1,0},{0,1,1}};
-        System.out.println(orangesRotting(arr));
+        findContinuousSequence1(9);
+
+//        int[][] arr = {{2,1,1},{1,1,0},{0,1,1}};
+//        System.out.println(orangesRotting(arr));
 //        findMedianSortedArrays(new int[]{1,3,4},new int[]{1,3,4,5,7});
 
 //        distributeCandies(60,4);
