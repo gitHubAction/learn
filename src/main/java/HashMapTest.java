@@ -5,6 +5,7 @@ import java.io.InvalidObjectException;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -31,7 +32,17 @@ public class HashMapTest {
         for (Object o:map.keySet()) {
             System.out.println(map.get(o));
         }*/
-        System.out.println(tableSizeFor(65));
+        System.out.println(tableSizeFor(3));
+
+        bigMul(null == "12" ? BigDecimal.ZERO : new BigDecimal(12)
+                ,null == "13" ? BigDecimal.ZERO :BigDecimal.TEN);
+    }
+
+
+    static BigDecimal bigMul(BigDecimal arg1 ,BigDecimal arg2){
+        BigDecimal args = BigDecimal.ZERO;
+        args = arg1.multiply(arg2).setScale(8,BigDecimal.ROUND_HALF_UP);
+        return args.stripTrailingZeros();
     }
 
     static int tableSizeFor(int cap) {

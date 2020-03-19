@@ -1,7 +1,4 @@
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * @Author: zhangsh
@@ -74,8 +71,26 @@ public class MutlTreeItera {
         l11.setChilds(list21);
 
 
+        //基于广度优先
+        bf(root);
+        System.out.println("================");
+        //基于深度优先算法
+        dfs(root);
+    }
 
-        iteratorRange(root);
+    private static void dfs(TreeNode root) {
+        if(root == null)return;
+        Stack<TreeNode> stack = new Stack<TreeNode>();
+        stack.push(root);
+        while(stack!=null && stack.size() > 0){
+            TreeNode treeNode = stack.pop();
+            System.out.println(treeNode.val);
+            if(treeNode.childs != null && stack.size() < 0){
+                for (TreeNode temp:treeNode.childs) {
+                    stack.push(temp);
+                }
+            }
+        }
     }
 
     /**
@@ -107,7 +122,7 @@ public class MutlTreeItera {
      * 广度遍历并记录深度
      * @param node
      */
-    public static void iteratorRange(TreeNode node){
+    public static void bf(TreeNode node){
         int deep = 0;
         Queue<TreeNode> parent = new ArrayDeque<>();
         Queue<TreeNode> children = new ArrayDeque<>();
@@ -127,8 +142,6 @@ public class MutlTreeItera {
                 deep++;
             }
         }
-
-
     }
 
 }

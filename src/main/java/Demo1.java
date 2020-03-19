@@ -1,4 +1,10 @@
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -84,5 +90,15 @@ public class Demo1 {
 //        System.out.println(map);
 //        System.out.println("耗时(ms):" + (System.currentTimeMillis() - starTime));
         System.out.println(1<<1);
+
+        int a = 2;
+        param(a);
+        System.out.println(a);
+    }
+
+
+    static void param(int a){
+        int b = a++;
+        System.out.println(b+"-------a="+a);
     }
 }

@@ -6,11 +6,11 @@ package linkedList;
  * @Version 1.0
  * Description
  */
-public class ListNode {
-    private int val;
-    private ListNode next;
+public class Node {
+    int val;
+    Node next;
 
-    public ListNode(int val) {
+    public Node(int val) {
         this.val = val;
     }
 
@@ -22,11 +22,11 @@ public class ListNode {
         this.val = val;
     }
 
-    public ListNode getNext() {
+    public Node getNext() {
         return next;
     }
 
-    public void setNext(ListNode next) {
+    public void setNext(Node next) {
         this.next = next;
     }
 }
