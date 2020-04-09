@@ -281,7 +281,6 @@ public class LeetCode {
     }
 
     public static void main(String[] args) {
-
         findContinuousSequence1(9);
 
 //        int[][] arr = {{2,1,1},{1,1,0},{0,1,1}};

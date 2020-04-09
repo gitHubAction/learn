@@ -19,6 +19,11 @@
             <version>1.1.8</version>
 
         </dependency>
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>3.2.2</version>
+        </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
         <dependency>
@@ -47,6 +52,25 @@
             <artifactId>amqp-client</artifactId>
             <version>3.4.1</version>
         </dependency>
+
+
+
+        <!-- https://mvnrepository.com/artifact/io.github.resilience4j/resilience4j-ratelimiter -->
+        <dependency>
+            <groupId>io.github.resilience4j</groupId>
+            <artifactId>resilience4j-ratelimiter</artifactId>
+            <version>1.3.1</version>
+        </dependency>
+
+
+
+        <!-- https://mvnrepository.com/artifact/org.redisson/redisson -->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>3.12.3</version>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>

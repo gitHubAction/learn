@@ -18,7 +18,9 @@ public class Sort {
         for (int i = 0; i < ints.length; i++) {
             System.out.println(ints[i]);
         }*/
-        System.out.println(null == Integer.valueOf(1) );
+//        System.out.println(null == Integer.valueOf(1) );
+        int[] ints1 = {3,6,7};
+        int[] ints = bubleSort(ints1);
     }
 
     public static int[] bubleSort(int[] arr){

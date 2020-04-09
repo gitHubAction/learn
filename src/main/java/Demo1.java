@@ -1,4 +1,7 @@
 
+import com.google.common.base.Supplier;
+import com.google.common.util.concurrent.RateLimiter;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -90,15 +93,17 @@ public class Demo1 {
 //        System.out.println(map);
 //        System.out.println("耗时(ms):" + (System.currentTimeMillis() - starTime));
         System.out.println(1<<1);
-
         int a = 2;
-        param(a);
+//        param(a);
         System.out.println(a);
     }
 
 
-    static void param(int a){
-        int b = a++;
-        System.out.println(b+"-------a="+a);
+    static void param(){
+        System.out.println(11111);
+    }
+
+    static void print(Supplier<Integer> getAndIncrement){
+        System.out.println(getAndIncrement.get());
     }
 }
