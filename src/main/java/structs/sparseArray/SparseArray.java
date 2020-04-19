@@ -1,4 +1,4 @@
-package structs;
+package structs.sparseArray;
 
 /**
  * @Author: zhangsh
