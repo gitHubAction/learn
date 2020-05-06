@@ -8,6 +8,7 @@ public class ListNode {
     int number;
     String name;
     ListNode next;
+    ListNode pre;
 
     public ListNode(int no ,String name){
         this.number = no;

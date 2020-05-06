@@ -29,7 +29,7 @@ public class SingLinkedList {
         singLinkedList.list();
 
         System.out.println("反转后的链表=========");
-        singLinkedList.inverse(singLinkedList.getHead());
+        SingLinkedList.inverse(singLinkedList.getHead());
         singLinkedList.list();
 
 //        inverse.remove(2);
