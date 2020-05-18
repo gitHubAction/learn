@@ -1,5 +1,9 @@
 package structs.queue;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class ArrayQueue {
 
     //指向队列第一个元素的地址
@@ -58,5 +62,14 @@ public class ArrayQueue {
         System.out.println(queue.poll());
         System.out.println(queue.poll());
         System.out.println(queue.poll());
+
+        List<Integer> ints = new ArrayList<>();
+        ints.add(1);
+        ints.add(2);
+        ints.add(3);
+        ints.add(4);
+        ints.add(5);
+        ints.add(2,3);
+        ints.forEach(System.out::println);
     }
 }
