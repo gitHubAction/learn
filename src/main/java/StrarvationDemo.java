@@ -11,9 +11,11 @@ public class StrarvationDemo {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         MyCallable task   = new MyCallable();
+        AnotherCallable task1   = new AnotherCallable();
+        Future<String> submit1 = single.submit(task1);
         Future<String> submit = single.submit(task);
 
-        System.out.println(submit.get());
+        System.out.println(submit1.get());
         System.out.println("over");
         single.shutdown();
     }
