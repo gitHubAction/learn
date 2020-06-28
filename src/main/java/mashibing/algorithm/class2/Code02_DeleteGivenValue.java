@@ -10,7 +10,7 @@ package mashibing.algorithm.class2;
  *  2、来到头部不是要删除的位置，继续删除
  * )
  */
-public class Code2_DeleteGivenValue {
+public class Code02_DeleteGivenValue {
 
     public static Code01_LinkedList.Node deleteGivenValue(Code01_LinkedList.Node head ,int value){
 
