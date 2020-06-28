@@ -1,4 +1,4 @@
-package mashibing.algorithm;
+package mashibing.algorithm.class1;
 
 /**
  * ClassName:    Code07_EvenTimeOddTimes
