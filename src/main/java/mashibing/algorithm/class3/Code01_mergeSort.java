@@ -1,8 +1,5 @@
 package mashibing.algorithm.class3;
 
-import java.util.Arrays;
-import java.util.Collections;
-
 /**
  * ClassName:    Code01_mergeSort
  * Package:    mashibing.algorithm.class3
@@ -135,7 +132,7 @@ public class Code01_mergeSort {
 
     // for test
     public static void main(String[] args) {
-        int testTime = 100;
+        /*int testTime = 100;
         int maxSize = 100;
         int maxValue = 100;
         boolean succeed = true;
@@ -151,6 +148,7 @@ public class Code01_mergeSort {
                 break;
             }
         }
-        System.out.println(succeed ? "Nice!" : "Oops!");
+        System.out.println(succeed ? "Nice!" : "Oops!");*/
+        mergeSort1(new int[]{3,4,5,1,2,6});
     }
 }
