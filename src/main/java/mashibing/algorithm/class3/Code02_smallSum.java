@@ -15,6 +15,12 @@ package mashibing.algorithm.class3;
  *
  *
  * 思路：归并排序
+ *
+ * 递归的时间复杂度计算公式  T(N) = a * T(N/b) + O(N ^ d)
+ *                        logb(a) == d           O(N^d * logN)
+ *                        logb(a) > d            O(N ^ logb(a))
+ *                        logb(a) < d            O(N ^ d)
+ *
  */
 public class Code02_smallSum {
 
@@ -31,7 +37,7 @@ public class Code02_smallSum {
     }
 
     private static int process(int[] arr, int L, int R) {
-        if(L == R) return 0;
+        if(L == R) return 0;//base case
         int mid = L + ((R - L)>>1);
         int left = process(arr,L,mid);
         int right = process(arr,mid+1,R);
