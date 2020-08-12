@@ -4,7 +4,7 @@ import org.springframework.aop.MethodBeforeAdvice;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.lang.Nullable;
+//import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
@@ -19,7 +19,7 @@ import java.lang.reflect.Method;
 @Component
 public class MethodBeforeInterceptor implements BeanPostProcessor {
 
-    @Nullable
+//    @Nullable
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         if("serviceA".equals(beanName)){

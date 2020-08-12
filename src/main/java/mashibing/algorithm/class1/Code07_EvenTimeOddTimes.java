@@ -49,7 +49,7 @@ public class Code07_EvenTimeOddTimes {
         // 000000001
         //找出eor中二进制位最右边的1
         int _eor = eor & (~eor + 1);
-        //数组可以被分成为两位数，一类为在该位置上为1的，一类是为0的，
+        //数组可以被分成为两类数，一类为在该位置上为1的，一类是为0的，
         // 但是出现奇数次的两种数肯定不为同一类
         for (int i = 0; i < arr.length; i++) {
             _eor ^= arr[i];

@@ -1,14 +1,21 @@
 package netty.fileServer;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.stream.ChunkedFile;
+import io.netty.util.CharsetUtil;
 
+import javax.activation.MimetypesFileTypeMap;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.RandomAccessFile;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.regex.Pattern;
 
-import static io.netty.handler.codec.http.HttpHeaderNames.CONNECTION;
+import static io.netty.handler.codec.http.HttpHeaderNames.*;
 import static io.netty.handler.codec.http.HttpUtil.isKeepAlive;
 import static io.netty.handler.codec.http.HttpUtil.setContentLength;
 
@@ -19,7 +26,6 @@ import static io.netty.handler.codec.http.HttpUtil.setContentLength;
  * Description
  */
 public class HttpFileServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
-/*
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         cause.printStackTrace();
@@ -199,7 +205,7 @@ public class HttpFileServerHandler extends SimpleChannelInboundHandler<FullHttpR
         }
         buf.append("</ul></body></html>\r\n");
         //分配消息缓冲对象
-        ByteBuf buffer=Unpooled.copiedBuffer(buf,CharsetUtil.UTF_8);
+        ByteBuf buffer= Unpooled.copiedBuffer(buf, CharsetUtil.UTF_8);
         //将缓冲区的内容写入响应对象，并释放缓冲区
         response.content().writeBytes(buffer);
         buffer.release();
@@ -223,7 +229,8 @@ public class HttpFileServerHandler extends SimpleChannelInboundHandler<FullHttpR
     private static void setContentTypeHeader(HttpResponse response,File file){
         MimetypesFileTypeMap mimetypesTypeMap=new MimetypesFileTypeMap();
         response.headers().set(CONTENT_TYPE,mimetypesTypeMap.getContentType(file.getPath()));
-    }*/
+    }
+/*
 
     private String url;
 
@@ -233,30 +240,40 @@ public class HttpFileServerHandler extends SimpleChannelInboundHandler<FullHttpR
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest request) throws Exception {
-        /** 解码失败 **/
+        */
+/** 解码失败 **//*
+
         if (!request.decoderResult().isSuccess()) {
             FileProcessHelper.sendError(ctx, HttpResponseStatus.BAD_REQUEST);
             return;
         }
-        /** 只支持GET方法 **/
+        */
+/** 只支持GET方法 **//*
+
         if (!request.method().equals(HttpMethod.GET)) {
             FileProcessHelper.sendError(ctx, HttpResponseStatus.METHOD_NOT_ALLOWED);
             return;
         }
-        /** 格式化url并判断 **/
+        */
+/** 格式化url并判断 **//*
+
         final String uri = request.uri();
         final String path = FileProcessHelper.organizedURL(uri,url);
         if (null == path) {
             FileProcessHelper.sendError(ctx, HttpResponseStatus.FORBIDDEN);
             return;
         }
-        /** 对文件路径的判断 **/
+        */
+/** 对文件路径的判断 **//*
+
         File file = new File(path);
         if (file.isHidden() || !file.exists()) {
             FileProcessHelper.sendError(ctx, HttpResponseStatus.NOT_FOUND);
             return;
         }
-        /** 判断请求的是否是文件夹 **/
+        */
+/** 判断请求的是否是文件夹 **//*
+
         if (file.isDirectory()) {
             if (uri.endsWith("/")) {
                 FileProcessHelper.fileList(ctx, file);
@@ -265,7 +282,9 @@ public class HttpFileServerHandler extends SimpleChannelInboundHandler<FullHttpR
             }
             return;
         }
-        /** 文件的判断 **/
+        */
+/** 文件的判断 **//*
+
         if (!file.isFile()) {
             FileProcessHelper.sendError(ctx, HttpResponseStatus.FORBIDDEN);
             return;
@@ -273,7 +292,9 @@ public class HttpFileServerHandler extends SimpleChannelInboundHandler<FullHttpR
 
         RandomAccessFile randomAccessFile = null;
         try {
-            /** 只读的方式打开文件 **/
+            */
+/** 只读的方式打开文件 **//*
+
             randomAccessFile = new RandomAccessFile(file, "r");
         } catch (FileNotFoundException e) {
             FileProcessHelper.sendError(ctx, HttpResponseStatus.NOT_FOUND);
@@ -281,11 +302,17 @@ public class HttpFileServerHandler extends SimpleChannelInboundHandler<FullHttpR
         }
 
         long fileLegth = randomAccessFile.length();
-        /** 创建一个Http响应文件大小 **/
+        */
+/** 创建一个Http响应文件大小 **//*
+
         HttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
-        /** 设置响应文件大小 **/
+        */
+/** 设置响应文件大小 **//*
+
         setContentLength(response, fileLegth);
-        /** 设置content type **/
+        */
+/** 设置content type **//*
+
         FileProcessHelper.setContentTypeHeader(response, file);
         if (isKeepAlive(request)) {
             response.headers().set(CONNECTION, HttpHeaderValues.KEEP_ALIVE);
@@ -310,7 +337,9 @@ public class HttpFileServerHandler extends SimpleChannelInboundHandler<FullHttpR
             }
         });
         ChannelFuture lastContentFuture = ctx.writeAndFlush(LastHttpContent.EMPTY_LAST_CONTENT);
-        /** 如果不支持keep-alive ，服务器端主动关闭请求 **/
+        */
+/** 如果不支持keep-alive ，服务器端主动关闭请求 **//*
+
         if (!isKeepAlive(request)) {
             lastContentFuture.addListener(ChannelFutureListener.CLOSE);
         }
@@ -322,6 +351,7 @@ public class HttpFileServerHandler extends SimpleChannelInboundHandler<FullHttpR
             FileProcessHelper.sendError(ctx, HttpResponseStatus.INTERNAL_SERVER_ERROR);
         }
     }
+*/
 
 
     @Override

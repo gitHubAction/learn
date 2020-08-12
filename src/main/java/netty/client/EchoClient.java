@@ -29,7 +29,7 @@ public class EchoClient {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        new EchoClient("127.0.0.1",8921).start();
+        new EchoClient("127.0.0.1",8081).start();
     }
 
     public void start() throws InterruptedException {

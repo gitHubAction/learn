@@ -27,7 +27,7 @@ public class HttpFileServer {
     private static final String DEFAULT_URL="/src/main/java/";
 
     public static void main(String[] args) {
-        int port = 8080;
+        int port = 8081;
         if(args.length>0){
             try {
                 port = Integer.valueOf(args[0]);

@@ -17,7 +17,7 @@
             <entry key="com.zeroturnaround.jrebel.remoting.ModuleRemoteServerPreviousEnabledSelection" value="instance" />
             <entry key="com.zeroturnaround.jrebel.remoting.ModuleRemoteServerSelection" value="instance" />
             <entry key="jrebelEnabled" value="true" />
-            <entry key="lastExternalPluginCheckTime" value="1594006945424" />
+            <entry key="lastExternalPluginCheckTime" value="1596771243965" />
           </map>
         </option>
         <option name="masterModuleName" />
