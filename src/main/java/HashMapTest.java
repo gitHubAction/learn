@@ -1,3 +1,4 @@
+import cn.hutool.core.date.DateTime;
 import sun.misc.SharedSecrets;
 
 import java.io.IOException;
@@ -23,7 +24,7 @@ public class HashMapTest {
 
     public static void main(String[] args) {
         HashMap map = new HashMap();
-        for (int i = 0; i < 10; i++) {
+        /*for (int i = 0; i < 10; i++) {
             A a = new A();
             B b = new B();
             map.put(a,i);
@@ -33,7 +34,14 @@ public class HashMapTest {
             System.out.println(map.get(o));
         }
         System.out.println(tableSizeFor(3));
+*/
+        DateTime now = DateTime.now();
 
+
+        map.put(null,"a");
+
+        Hashtable table = new Hashtable();
+        table.put(null,"A");
     }
 
 

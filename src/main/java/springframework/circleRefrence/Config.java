@@ -1,6 +1,7 @@
 package springframework.circleRefrence;
 
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * ClassName:    Config
@@ -9,6 +10,8 @@ import org.springframework.context.annotation.ComponentScan;
  * Author:   zsh
  * Description:
  */
-@ComponentScan
+@Configuration
+@ComponentScan(value = "springframework.beanScope")
 public class Config {
+
 }

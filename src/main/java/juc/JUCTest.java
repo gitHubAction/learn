@@ -1,7 +1,6 @@
 package juc;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.*;
 
 /**
  * ClassName:    JUCTest
@@ -48,15 +47,45 @@ public class JUCTest {
         CompletableFuture<Integer> future = CompletableFuture.supplyAsync(() -> 100);
         CompletableFuture<Integer> second = CompletableFuture.supplyAsync(() -> 200);
         CompletableFuture<Integer> third = CompletableFuture.supplyAsync(() -> 300);
-        CompletableFuture.allOf(future, second, third);
 
     }
 
     public void anyOf() throws InterruptedException, ExecutionException {
-        CompletableFuture<Integer> future = CompletableFuture.supplyAsync(() -> 100);
-        CompletableFuture<Integer> second = CompletableFuture.supplyAsync(() -> 200);
-        CompletableFuture<Integer> third = CompletableFuture.supplyAsync(() -> 300);
-        CompletableFuture.anyOf(future, second, third);
+        CompletableFuture<Integer> future = CompletableFuture.supplyAsync(() ->{
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return 100;
+        } );
+        CompletableFuture<Integer> second = CompletableFuture.supplyAsync(() -> {
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return 200;
+        });
+        CompletableFuture<Integer> third = CompletableFuture.supplyAsync(() -> {
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return 300;
+        });
+        CompletableFuture<Object> objectCompletableFuture = CompletableFuture.anyOf(future, second, third);
+
+        System.out.println(objectCompletableFuture.get());
+    }
+
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
+        ExecutorService executorService = Executors.newFixedThreadPool(5);
+        for (int i = 0; i < 10; i++) {
+            final int j = i;
+            executorService.submit(() -> j);
+        }
     }
 
 }
