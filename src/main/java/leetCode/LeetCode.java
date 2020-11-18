@@ -1,5 +1,7 @@
 package leetCode;
 
+import org.springframework.util.StringUtils;
+
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -12,6 +14,43 @@ import java.util.*;
  */
 public class LeetCode {
 
+    /**
+     * 字符串转换成整数
+     *  注意的三个点
+     *      1、''为char字节  ""为字符串String
+     *      2、字节比较时用  == 比较 ，
+     *      3、 int最大值加1后超出边界变回int下边界   所以用 1L + Integer.MAX_VALUE
+     * @param s
+     * @return
+     */
+    public static int myAtoi(String s) {
+        if("".equals((s = s.trim()))){
+            return 0;
+        }
+        if(Character.isLetter(s.charAt(0))){
+            return 0;
+        }
+        long res = 0;
+        //正负  '' 表示字节char   "" 表示String
+        boolean neg = '-' == s.charAt(0);
+        int i = '-' == s.charAt(0) || '+' ==  s.charAt(0) ? 1 : 0;
+        while(i < s.length() && Character.isDigit(s.charAt(i))){
+            // 注意字节值相加
+            res = res*10 + (s.charAt(i++) - '0');
+            // 正值
+            if(!neg && res > Integer.MAX_VALUE){
+                res = Integer.MAX_VALUE;
+                break;
+            }
+            // 负值
+            //注意int最大值加1 边界问题
+            if(neg && res > 1L + Integer.MAX_VALUE){
+                res = 1L + Integer.MAX_VALUE;
+                break;
+            }
+        }
+        return neg ? (int)-res : (int)res;
+    }
 
     /**
      *罗马数字包含以下七种字符： I， V， X， L，C，D 和 M。
@@ -364,8 +403,9 @@ public class LeetCode {
     }
 
     public static void main(String[] args) {
-        findContinuousSequence1(9);
-
+//        findContinuousSequence1(9);
+        int a = myAtoi("   -42");
+        System.out.println(a);
 //        int[][] arr = {{2,1,1},{1,1,0},{0,1,1}};
 //        System.out.println(orangesRotting(arr));
 //        findMedianSortedArrays(new int[]{1,3,4},new int[]{1,3,4,5,7});
