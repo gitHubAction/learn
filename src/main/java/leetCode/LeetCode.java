@@ -15,6 +15,50 @@ import java.util.*;
 public class LeetCode {
 
     /**
+     * //编写一个函数来查找字符串数组中的最长公共前缀。
+     * //
+     * // 如果不存在公共前缀，返回空字符串 ""。
+     * //
+     * // 示例 1:
+     * //
+     * // 输入: ["flower","flow","flight"]
+     * //输出: "fl"
+     * //
+     * //
+     * // 示例 2:
+     * //
+     * // 输入: ["dog","racecar","car"]
+     * //输出: ""
+     * //解释: 输入不存在公共前缀。
+     * @param strs
+     * @return
+     */
+    public String longestCommonPrefix(String[] strs) {
+        if(strs == null || strs.length == 0){
+            return "";
+        }
+
+        String prefix = strs[0];
+        for (int i = 1; i < strs.length; i++) {
+            // 获取最长公共子串
+            prefix = commonprefix(prefix,strs[i]);
+            if(prefix.length() == 0){
+                break;
+            }
+        }
+        return prefix;
+    }
+
+    public String commonprefix(String prefix,String str){
+        int index = 0;
+        int len = Math.min(prefix.length(),str.length());
+        while (index < len && prefix.charAt(index) == str.charAt(index)){
+            index++;
+        }
+        return prefix.substring(0,index);
+    }
+
+    /**
      * 字符串转换成整数
      *  注意的三个点
      *      1、''为char字节  ""为字符串String
