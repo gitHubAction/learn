@@ -1,9 +1,13 @@
 package leetCode;
 
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.date.DateUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import org.springframework.util.StringUtils;
 
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -13,6 +17,78 @@ import java.util.*;
  * Description
  */
 public class LeetCode {
+
+
+
+
+    /*（一）渔民小渔买了一个新的鱼群探测器，可以探测到海底的地形以及鱼群分布。
+
+    探测器返回的数据为一个字符串，格式例如 "[[1,2,...],3,...]"。其中的方括号嵌套层数代表深度，数字代表鱼群数量。
+
+    小渔想知道海底中不同的深度分别分布的鱼群数量之和，你能帮帮他吗？
+
+    注意：返回结果需包含所有在 fish 中出现的深度，即使在该深度鱼群数量为零或者为空
+
+
+
+    示例 1:
+
+    输入: fish = "[[1,1],2,[1,1]]"
+    输出: [2,4]
+    解释: 在深度为 1 的地方有两个鱼群，在深度为 2 的地方有四个鱼群（四个 1 ），返回 [2, 4]
+    示例 2:
+
+    输入: fish = "[1,[4,[6]]]"
+    输出: [1,4,6]
+    解释: 在深度为 1 的地方有一个鱼群，在深度为 2 的地方有四个鱼群，在深度为 3 的地方有六个鱼群，返回 [1, 4, 6]
+    示例 3:
+
+    输入: fish = "[[[1,[]],0]]"
+    输出: [0,0,1,0]
+    解释: 在深度为 1 和 4 的地方没有鱼群，在深度为 2 的地方有 0 个鱼群，在深度为 3 的地方有 1 个鱼群，返回 [0,0,1,0]
+
+
+    提示：
+
+            2 <= fish.length <= 3*10^3
+    fish[i] 仅由数字、逗号、方括号组成 且每个数字均 0 <= digit <= 10^6
+    题目保证输入数据的方括号符合匹配规则*/
+    public static Integer[] scan(String fish){
+        if(StringUtils.isEmpty(fish) || "[]".equals(fish)){
+            return new Integer[]{0};
+        }
+        Map<String, Integer> map = new TreeMap<>();
+        // 利用栈结构
+        Stack<Character> stack = new Stack<>();
+        int i = 0;
+        // 深度
+        int dig = 0;
+        while (i < fish.length()){
+            char c = fish.charAt(i++);
+            if(',' == c){
+                continue;
+            }
+            if('[' == c){
+                stack.push(c);
+                map.putIfAbsent(""+(dig++),0);
+            }
+            if(']' == c){
+                // 将 '[' 弹出
+                stack.pop();
+                // 深度-1
+                dig--;
+                continue;
+            }
+            // 数值
+            if(Character.isDigit(c)){
+                map.put((dig-1)+"",map.get((dig-1)+"") + (c - '0'));
+            }
+        }
+        return map.values().toArray(new Integer[map.values().size()]);
+    }
+
+
+
 
     /**
      * //编写一个函数来查找字符串数组中的最长公共前缀。
@@ -448,8 +524,8 @@ public class LeetCode {
 
     public static void main(String[] args) {
 //        findContinuousSequence1(9);
-        int a = myAtoi("   -42");
-        System.out.println(a);
+//        int a = myAtoi("   -42");
+//        System.out.println(a);
 //        int[][] arr = {{2,1,1},{1,1,0},{0,1,1}};
 //        System.out.println(orangesRotting(arr));
 //        findMedianSortedArrays(new int[]{1,3,4},new int[]{1,3,4,5,7});
@@ -489,14 +565,25 @@ public class LeetCode {
         }*/
 //        System.out.println(largestPerimeter(new int[]{2,1,2}));
 
+        String[] jobParam = new String[3];
+        for (int i = 0; i < jobParam.length; i++) {
+            System.out.println(jobParam[i]);
+        }
 
-        String str1 = new StringBuilder("计算机").append("win7").toString();
-        System.out.println(str1.intern() == str1);
+        System.out.println(DateUtil.format(DateUtil.parse("2020-11-26","yyyy-MM-dd"),DatePattern.NORM_DATETIME_PATTERN));
 
 
-        String str2 = new StringBuilder("ja").append("va").toString();
-        System.out.println(str2.intern() == str2);
-
+        Date endDate = new Date();
+        DateTime startDate = DateUtil.offsetMonth(endDate, -12);
+        String startDateStr = DateUtil.format(startDate, DatePattern.NORM_DATETIME_PATTERN);
+        String endDateStr = DateUtil.format(endDate, DatePattern.NORM_DATETIME_PATTERN);
+        System.out.println(String.format("startDate [{%s}]  endDate [{%s}]", startDateStr, endDateStr));
+//        Integer[] scan = scan("[[1,1],2,[1,1]]");
+//        System.out.println(scan.toString());
+        String a = "1,2, ";
+        String[] split = a.split(",");
+        Integer.valueOf(split[2]);
+        System.out.println(split.length);
     }
 
 

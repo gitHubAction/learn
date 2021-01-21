@@ -90,6 +90,23 @@ public class ListNodeEdu {
         return Math.max(leftDepth,rigthDepth) + 1;
     }
 
+    public static Node inserSort(Node node){
+        if(node == null) return node;
+        Node cur = node.next;
+        Node pre = node;
+        while (cur != null){
+            Node temp = cur.next;
+            if(cur.val > pre.val){
+                //节点互换
+                pre.next = temp;
+                cur.next = pre;
+            }
+            cur = temp;
+            pre = pre.next;
+
+        }
+        return node;
+    }
     /**
      * 链表排序
      * @param node

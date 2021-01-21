@@ -1,5 +1,3 @@
-import javafx.beans.binding.When;
-
 import java.util.Arrays;
 
 /**
@@ -19,8 +17,7 @@ public class Sort {
             System.out.println(ints[i]);
         }*/
 //        System.out.println(null == Integer.valueOf(1) );
-        int[] ints1 = {3,6,7};
-        int[] ints = bubleSort(ints1);
+        System.out.println("   32   ".trim());
     }
 
     public static int[] bubleSort(int[] arr){
