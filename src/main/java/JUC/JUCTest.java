@@ -1,9 +1,19 @@
 package juc;
 
 import JUC.CompletableFutureUtil;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
+import com.google.common.collect.Lists;
+import structs.linkedList.ListNode;
 
 import java.time.Duration;
+import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * ClassName:    JUCTest
@@ -84,7 +94,7 @@ public class JUCTest {
     }
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        System.out.println(Integer.MAX_VALUE);
+        /*System.out.println(Integer.MAX_VALUE);
         System.out.println(Long.MAX_VALUE);
         JUCTest juc = new JUCTest();
         ExecutorService executorService = Executors.newFixedThreadPool(2);
@@ -103,9 +113,35 @@ public class JUCTest {
         String s = resultA.get();
         System.out.println(s);
         String b = resultB.get();
-        System.out.println(b);
+        System.out.println(b);*/
+        System.out.println(Long.MIN_VALUE * 60);
+
+        System.out.println(new StringJoiner(":","{","}").add("appCode").add("areaCode").add("carrierCode").toString());
     }
 
+    public static int reverse(int x) {
+        if(x == 0 || x < Integer.MIN_VALUE || x > Integer.MAX_VALUE){
+            return 0;
+        }
+        StringBuilder sb = new StringBuilder();
+        if(x < 0){
+            sb.append("-");
+            x = 0 - x;
+        }
+        while(x != 0){
+            sb.append(x % 10);
+            x = x / 10;
+        }
+        if(x != 0){
+            sb.append(x);
+        }
+        String res = sb.toString();
+        long l = Long.parseLong(res);
+        if(l > Integer.MAX_VALUE || l < Integer.MIN_VALUE){
+            return 0;
+        }
+        return Integer.parseInt(res);
+    }
 
     public String getA(){
         try {

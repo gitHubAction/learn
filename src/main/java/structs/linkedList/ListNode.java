@@ -1,8 +1,11 @@
 package structs.linkedList;
 
+import lombok.Data;
+
 /**
  * 链表节点
  */
+@Data
 public class ListNode {
 
     int number;

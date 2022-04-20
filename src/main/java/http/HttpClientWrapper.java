@@ -156,7 +156,7 @@ public class HttpClientWrapper {
 
     public ResponseStatus sendRequest(String url, int connectTimeout, int connectionRequestTimeout, int socketTimeout)
             throws HttpException, IOException {
-        return sendRequest(url, "UTF-8", HttpMethod.GET, null, connectTimeout, connectionRequestTimeout, socketTimeout);
+        return sendRequest(url, null, HttpMethod.GET, null, connectTimeout, connectionRequestTimeout, socketTimeout);
     }
 
     public ResponseStatus sendRequest(String url,Map<String,String> head,String urlEncoding, int connectTimeout, int connectionRequestTimeout, int socketTimeout)
@@ -219,7 +219,7 @@ public class HttpClientWrapper {
             }
             request.setConfig(requestConfig);
 
-            //request.addHeader("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322)");
+//            request.addHeader("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322)");
 
             response = client.execute(request);
             entity = response.getEntity();

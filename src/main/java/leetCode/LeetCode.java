@@ -6,8 +6,11 @@ import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.google.common.collect.Lists;
 import org.springframework.util.StringUtils;
 
+import java.io.UnsupportedEncodingException;
+import java.text.Collator;
 import java.util.*;
 
 /**
@@ -17,6 +20,250 @@ import java.util.*;
  * Description
  */
 public class LeetCode {
+
+
+    /**
+     * 暴力解会栈溢出
+     * @param n
+     * @return
+     */
+    public static String nearestPalindromic(String n) {
+        if(n == null || n == ""){
+            return "";
+        }
+        long a = Long.valueOf(n);
+
+        long left = process(a - 1, false);
+        long right = process(a + 1,true);
+        if(Math.abs(a - left) < Math.abs(a - right)){
+            return left+"";
+        }else if(Math.abs(a - left) == Math.abs(a - right)){
+            return Math.min(left,right)+"";
+        }else{
+            return right+"";
+        }
+    }
+
+    public static long process(long a, boolean flag){
+        if(ishuiwen(a)){
+            return a;
+        }
+        return process(flag ? a+1 : a-1, flag);
+    }
+
+    public static boolean ishuiwen(long a){
+        String temp = a+"";
+        int i = 0;
+        int j = temp.length() -1;
+        while(i < j){
+            if(temp.charAt(i++) != temp.charAt(j--)){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 1 如果n为1位数，则直接减1即为最小的且离n最近的回文数
+     * 2 获取到n的一半，构造回文数（注意n长度的奇偶性）
+     * 3 获取到n的一半-1，构造回文数
+     * 4 获取到n的一半+1，构造回文数
+     * 5 获取到n位数少一位的最大值
+     * 6 获取到n位数大一位的最小值
+     * 7 求上述5个数的最小且离n最近的数
+     * @param n
+     * @return java.lang.String
+     * @author zhangshihao01
+     * @date 2022/3/3 10:11
+     */
+    public static String nearestPalindromic1(String n){
+        if(n.length() == 1){
+            return String.valueOf(Long.parseLong(n) - 1);
+        }
+        int nLen = n.length();
+        // 是否为奇数
+        boolean odd = (nLen & 1) == 1;
+        String half = n.substring(0, (nLen >> 1) + (odd ? 1 : 0));
+        long a = getH(half, odd);
+        long b = getH(String.valueOf(Long.parseLong(half) - 1), odd);
+        long c = getH(String.valueOf(Long.parseLong(half) + 1), odd);
+        long d = (long)Math.pow(10, nLen - 1) + 1;
+        long e = (long)Math.pow(10, nLen) - 1;
+        long nL = Long.parseLong(n);
+        b = getMinAndDisMin(b, a, nL);
+        b = getMinAndDisMin(b, c, nL);
+        b = getMinAndDisMin(b, d, nL);
+        b = getMinAndDisMin(b, e, nL);
+        return String.valueOf(b);
+    }
+
+    private static long getH(String half, boolean odd) {
+        StringBuilder res = new StringBuilder(half);
+        int hlen = half.length()-1;
+        hlen += odd ? -1 : 0;
+        while(hlen >= 0){
+            res.append(half.charAt(hlen--));
+        }
+        return Long.parseLong(res.toString());
+    }
+
+    private static long getMinAndDisMin(long res, long a, long nL) {
+        if(a != nL){
+            if(Math.abs(nL-a) < Math.abs(nL - res)){
+                return a;
+            }else if(Math.abs(nL-a) > Math.abs(nL - res)){
+                return res;
+            }else{
+                return Math.min(res,a);
+            }
+        }
+        return res;
+    }
+
+
+    /**
+     * 给你一个整形数组nums，在数组中找出有三个数组成的最大乘积，并输出这个乘积
+     * 实例1：
+     *  输入 nums=[1,2,3]
+     *  输出 6
+     *
+     * 实例2：
+     *  输入：nums=[1,2,3,4]
+     *  输出：24
+     *
+     * 示例3：
+     *  输入：nums=[-1,-2,-3,4]
+     *  输出：24
+     * @param nums
+     * @return
+     * @author zhangshihao01
+     * @date 2022/3/1 13:06
+     */
+    public static int findThreeMutilMax(int[] nums){
+        if(nums == null || nums.length < 3){
+            return 0;
+        }
+        Arrays.sort(nums);
+        int a = nums[0] * nums[1] * nums[nums.length-1];
+        int b = nums[nums.length-1] * nums[nums.length-2] * nums[nums.length-3];
+        return Math.max(a,b);
+    }
+
+
+    public static String complexNumberMultiply(String num1, String num2) {
+        // 获取两个数的实部和虚部
+        int[] arr1 = split(num1);
+        int[] arr2 = split(num2);
+        // 最后的虚部
+        int b = arr1[0] * arr2[1] + arr1[1] * arr2[0];
+        // 最后的实部
+        int a = arr1[0] * arr2[0] + (arr1[1] * arr2[1] * -1);
+        // 构造最后的字符串
+        return a + "+" + (b) +"i";
+    }
+
+    public static int[] split(String num){
+        String[] str = num.split("\\+");
+        str[1] = str[1].substring(0,str[1].length()-1);
+        return new int[]{Integer.valueOf(str[0]),Integer.valueOf(str[1])};
+    }
+
+
+    public static int[] findBall(int[][] grid){
+        if(grid == null || grid.length < 1){
+            return new int[]{-1};
+        }
+        int n = grid[0].length;
+        int rows = grid.length;
+        int[] res = new int[n];
+        for(int i = 0; i < n; i++){
+            System.out.println("第"+(i+1)+"个球");
+            res[i] = dfs(grid,i,0,n,rows);
+        }
+        return res;
+    }
+
+    public static int dfs(int[][] grid, int ball, int curRow,int cols, int rows){
+        // 左边界位置
+        if(ball == 0 && grid[curRow][ball] == -1){
+            return -1;
+        }
+        // 右边界位置
+        if(ball == cols - 1 && grid[curRow][ball] == 1){
+            return -1;
+        }
+        // 形成了V字形
+        if(grid[curRow][ball] != grid[curRow][ball+grid[curRow][ball]]){
+            return -1;
+        }
+        // 最后一行了
+        if(curRow == rows -1){
+            return ball + grid[curRow][ball];
+        }
+        // 没有到最后一行继续dfs
+        return dfs(grid, ball+grid[curRow][ball], curRow+1, cols, rows);
+    }
+
+
+
+    public static boolean isPalindrome(int x) {
+        if(x < 0){
+            return false;
+        }
+        int res = 0;
+        int temp = x;
+        while(temp != 0){
+            if(res < Integer.MIN_VALUE / 10 || res > Integer.MAX_VALUE / 10){
+                return false;
+            }
+            int dig = temp % 10;
+            temp /= 10;
+            res = res * 10 + dig;
+        }
+        return res == x;
+    }
+
+
+
+    public static int reverse(int x){
+        int rev = 0;
+        while (x != 0) {
+            if (rev < Integer.MIN_VALUE / 10 || rev > Integer.MAX_VALUE / 10) {
+                return 0;
+            }
+            int digit = x % 10;
+            x /= 10;
+            rev = rev * 10 + digit;
+        }
+        return rev;
+    }
+
+    public static double findMedianSortedArrays1(int[] nums1, int[] nums2) {
+        if((nums1 == null || nums1.length == 0) && (nums2 == null || nums2.length == 0)){
+            return 0;
+        }
+        // 合并数组
+        int[] help = new int[nums1.length + nums2.length];
+        int p1 = 0;
+        int p2 = 0;
+        int i = 0;
+        while(p1 < nums1.length && p2 < nums2.length){
+            help[i++] = nums1[p1] <= nums2[p2] ? nums1[p1++] : nums2[p2++];
+        }
+        while(p1 < nums1.length){
+            help[i++] = nums1[p1++];
+        }
+        while(p2 < nums2.length){
+            help[i++] = nums2[p2++];
+        }
+        // 求合并后的中位数
+        int mid = help.length >> 1;
+        if(help.length % 2 == 0){
+            return (help[mid] + help[mid-1])/2.0;
+        }else{
+            return help[mid];
+        }
+    }
 
 
 
@@ -388,10 +635,11 @@ public class LeetCode {
     }
 
 
-    class ListNode{
+    static class ListNode{
         int val;
         ListNode next;
         ListNode(int x) { val = x; }
+        ListNode(){}
     }
 
     /**
@@ -522,68 +770,613 @@ public class LeetCode {
         return strz.toString();
     }
 
+
+    public static String reverseOnlyLetters(String s) {
+        int p1 = 0;
+        int p2 = s.length() -1;
+        char[] res = s.toCharArray();
+        while(p1 != p2){
+            // p1位置是不是英文字母
+            // p2位置是不是英文字母
+            // 如果p1不是，p1++;p2不位置不动
+            if(Character.isLetter(res[p1]) && Character.isLetter(res[p2])){
+                // 互换
+                swap(res, p1++, p2--);
+                continue;
+            }
+            if(Character.isLetter(res[p1]) && !Character.isLetter(res[p2])){
+                p2--;
+                continue;
+            }
+            if(!Character.isLetter(res[p1]) && Character.isLetter(res[p2])){
+                p1++;
+                continue;
+            }
+            if(!Character.isLetter(res[p1]) && !Character.isLetter(res[p2])){
+                p1++;
+                p2--;
+                continue;
+            }
+        }
+        return new String(res);
+    }
+
+    public static void swap(char[] arr, int i, int j){
+        char temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+
+    public static String reversePrefix(String word, char ch) {
+        if(!word.contains(ch+"")){
+            return word;
+        }
+        Stack<Character> stack = new Stack<>();
+        int i = 0;
+        for(char t : word.toCharArray()){
+            i++;
+            stack.push(t);
+            if(t == ch){
+                break;
+            }
+        }
+        StringBuilder res = new StringBuilder();
+        while(!stack.isEmpty()){
+            res.append(stack.pop());
+        }
+        res.append(word.substring(i));
+        return res.toString();
+    }
+
+    public static int countGoodRectangles(int[][] rectangles) {
+        if(rectangles == null || rectangles.length < 1){
+            return 0;
+        }
+        Map<String,Integer> map = new HashMap<>();
+        Integer maxLen = Math.min(rectangles[0][0], rectangles[0][1]);
+        for(int i = 0; i < rectangles.length; i++){
+            Integer t = Math.min(rectangles[i][0], rectangles[i][1]);
+            maxLen = Math.max(t, maxLen);
+            if(map.keySet().contains(t+"")){
+                map.put(t+"", map.get(t+"")+1);
+            }else {
+                map.put(t+"", 1);
+            }
+        }
+        return map.get(maxLen+"") == null ? 0 :  map.get(maxLen+"");
+    }
+
+
+    public static String longestNiceSubstring(String s) {
+        if (s.length() < 2) {
+            return "";
+        }
+        Set<Character> cache = new HashSet<>();
+        for (char ch : s.toCharArray()) {
+            cache.add(ch);
+        }
+
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            if (cache.contains(Character.toUpperCase(ch))
+                    && cache.contains(Character.toLowerCase(ch))) {
+                continue;
+            }
+            String s1 = longestNiceSubstring(s.substring(0, i));
+            String s2 = longestNiceSubstring(s.substring(i + 1));
+            return s1.length() >= s2.length() ? s1 : s2;
+        }
+        return s;
+    }
+
+    public static int threeSumClosest(int[] nums, int target) {
+        if(nums == null || nums.length < 1){
+            return -1;
+        }
+        // 排序
+        Arrays.sort(nums);
+        int dis = Integer.MAX_VALUE;
+        int res = 0;
+        // 暴力找到所有的结果 求最接近的
+        for(int i = 0; i < nums.length; i++){
+            for(int j = i+1; j < nums.length; j++){
+                for(int k = j+1; k < nums.length; k++){
+                    int temp = nums[i] + nums[j] + nums[k];
+                    int tempDis = Math.abs(temp- target);
+                    if(Math.min(tempDis, dis) == tempDis){
+                        dis = tempDis;
+                        res = temp;
+                    }
+                }
+
+            }
+        }
+        return res;
+    }
+
+    public static long subArrayRanges(int[] nums) {
+        if(nums == null || nums.length < 1){
+            return 0L;
+        }
+        long res = 0L;
+        // 枚举所有子数组并累加范围和
+        int childLen = 2;
+
+        while(childLen <= nums.length){
+            int p = 0;
+            int p1 = p + childLen - 1;
+            while(p1 < nums.length){
+                res+= sum(nums, p++ , p1++);
+            }
+            childLen++;
+        }
+        return res;
+    }
+
+    public static long sum(int[] nums, int p, int p1){
+        // p -- p1 上最大减最小的和
+        int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+        for(int i = p; i <= p1; i++){
+            min = Math.min(nums[i],min);
+            max = Math.max(nums[i],max);
+        }
+        return (max - min);
+    }
+
+
+    public static long minimumTime(int[] time, int totalTrips) {
+        // 二分查找  下届为花费最小的时间1，上届为完成一趟旅途话费时间最长的公交车完成totalTrips的时间
+        Arrays.sort(time);
+        long left = 0;
+        // 记录当前最大完成旅途的时间
+        long right = 1L*  time[0] * totalTrips ;
+        // 在最小时间和最大时间之间搜索符合条件的时间
+        while (left < right ){
+            long mid = left + (right - left) /2;
+            // 记录当前完成旅途的车
+            long trips = 0;
+            // 遍历每个车次需要完成的时间
+            for(int t : time){
+                if(mid < t){
+                    break;
+                }
+                // 记录当前时间能完成的趟数
+                trips += mid / t;
+            }
+            // 如果当前完成的车次已经到达了完成的次数则缩小范围 搜索前面时间范围
+            if(trips >= totalTrips){
+                right = mid;
+            } else {
+                // 反之搜索后面时间范围
+                left = mid + 1;
+            }
+        }
+        return left;
+    }
+
+    public static int[] platesBetweenCandles(String s, int[][] queries) {
+        if(s == null || s == null){
+            return new int[queries.length];
+        }
+        if(!s.contains("|") || !s.contains("*")){
+            return new int[queries.length];
+        }
+        int[] res = new int[queries.length];
+        for(int i = 0; i < queries.length; i++){
+            res[i] = func(queries[i], s);
+        }
+        return res;
+    }
+
+    public static int func(int[] query, String s){
+        int p = query[0];
+        int p1 = query[1];
+        String t = s.substring(p,p1+1);
+        if(!t.contains("|") || !t.contains("*")){
+            return 0;
+        }
+        int res = 0;
+        while(p < p1){
+            if(s.charAt(p) == '|' && s.charAt(p1) == '|'){
+                for(int i = p+1; i < p1; i++){
+                    if(s.charAt(i) == '*'){
+                        res++;
+                    }
+                }
+                break;
+            }
+            if(s.charAt(p) == '*'){
+                p++;
+            }
+            if(s.charAt(p1) == '*'){
+                p1--;
+            }
+        }
+        return res;
+    }
+
+
+    public static ListNode reverseKGroup(ListNode head, int k) {
+        ListNode res = new ListNode();
+        ListNode resT = res;
+        // 指针
+        ListNode temp = head;
+        Stack<ListNode> stack = new Stack();
+        int t = k;
+        while(temp != null){
+            stack.push(temp);
+            temp = temp.next;
+            t--;
+            if(t == 0){
+                t = k;
+                while(!stack.isEmpty()){
+                    resT.next = stack.pop();
+                    resT = resT.next;
+                }
+                resT.next = null;
+            }
+        }
+        // 最后的可能不够k个
+        while(stack.size() > 1){
+            stack.pop();
+        }
+        if(!stack.isEmpty()){
+            resT.next = stack.pop();
+        }
+        return res.next;
+    }
+
+    public static String[] findRestaurant(String[] list1, String[] list2) {
+        if(list1 == null || list1.length < 1){
+            return new String[1];
+        }
+        if(list1 == null || list1.length < 1){
+            return new String[1];
+        }
+        Integer minSum = Integer.MAX_VALUE;
+        Map<Integer,List<String>> map = new HashMap<>();
+        for(int i = 0; i < list1.length; i++){
+            for(int j = 0; j < list2.length; j++){
+                if(list1[i] == list2[j]){
+                    List<String> temp = map.get(i+j);
+                    if(temp == null || temp.size() == 0){
+                        temp = new ArrayList<>();
+                    }
+                    temp.add(list1[i]);
+                    map.put(j+i, temp);
+                    minSum = Math.min(j+i, minSum);
+                }
+            }
+        }
+        return map.get(minSum) == null ? null : map.get(minSum).toArray(new String[map.get(minSum).size()]);
+    }
+
+    public static List<String> letterCombinations(String digits) {
+        if(digits.length() == 0){
+            return new ArrayList<String>();
+        }
+        Map<String,List<String>> temp = new HashMap<>();
+        temp.put("2",Arrays.asList("a","b","c"));
+        temp.put("3",Arrays.asList("d","e","f"));
+        temp.put("4",Arrays.asList("g","h","i"));
+        temp.put("5",Arrays.asList("j","k","l"));
+        temp.put("6",Arrays.asList("m","n","o"));
+        temp.put("7",Arrays.asList("p","q","r","s"));
+        temp.put("8",Arrays.asList("t","u","v"));
+        temp.put("9",Arrays.asList("w","x","y","z"));
+
+        List<String> res = new ArrayList<>();
+        // dfs
+        dfs(digits, 0, new StringBuilder(), res, temp);
+        return res;
+    }
+
+    public static void dfs(String digits,int index, StringBuilder sb, List<String> res, Map<String,List<String>> map){
+        if(index > digits.length() - 1){
+            res.add(sb.toString());
+            return;
+        }
+        String a = digits.charAt(index)+"";
+        List<String> t = map.get(a);
+        for(int i = 0; i < t.size(); i++){
+            sb.append(t.get(i));
+            dfs(digits, index+1, sb, res, map);
+            // 删除刚添加的
+            sb.deleteCharAt(sb.length()-1);
+        }
+    }
+
+
+    public static boolean isValid(String s) {
+        if(s == null || s == "" || s.length() < 2){
+            return false;
+        }
+        // 奇数长度直接返回false
+        if(s.length() % 2 != 0){
+            return false;
+        }
+        int l = 0, r = s.length()-1;
+        Stack<Character> stack = new Stack<>();
+        while(l <= r){
+            if(stack.isEmpty()){
+                stack.push(s.charAt(l++));
+            }else{
+                if(func(stack.peek(), s.charAt(l))){
+                    stack.pop();
+                    l++;
+                }else{
+                    stack.push(s.charAt(l));
+                    l++;
+                }
+            }
+        }
+        return stack.isEmpty();
+    }
+
+    public static boolean func(Character a, Character b){
+        if(a == '(' && b == ')'){
+            return true;
+        }
+        if(a == '[' && b == ']'){
+            return true;
+        }
+        if(a == '{' && b == '}'){
+            return true;
+        }
+        return false;
+    }
+
+
+    public static int longestValidParentheses(String s) {
+        if(s == "" || s == null){
+            return 0;
+        }
+        Stack<Character> stack = new Stack();
+        Map<Character,Character> map = new HashMap<>();
+        map.put(')','(');
+        for(int i = 0; i < s.length(); i++){
+            char t = s.charAt(i);
+            if(map.containsKey(t)){
+                if(stack.isEmpty() || stack.peek() != map.get(t)){
+                    continue;
+                }
+                stack.push(t);
+            }else{
+                if(stack.isEmpty() || stack.peek() != map.get(s.charAt(i-1))){
+                    stack.push(t);
+                }
+            }
+        }
+        return stack.size();
+    }
+
+
+    public static int maxSubArray(int[] nums) {
+        int pre = 0, maxAns = nums[0];
+        for (int x : nums) {
+            pre = Math.max(pre + x, x);
+            maxAns = Math.max(maxAns, pre);
+        }
+        return maxAns;
+    }
+    public static int findKthNumber(int n, int k) {
+        Integer[] t = new Integer[n+1];
+        for(int i = 0; i <= n; i++){
+            t[i] = i;
+        }
+        Arrays.sort(t, new Comparator<Object>() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                return String.valueOf(o1).compareTo(String.valueOf(o2));
+            }
+        });
+        int i = 1;
+        int res = 0;
+        while(i <= k){
+            res = t[i++];
+        }
+        return res;
+    }
+
+    public static int search(int[] nums, int target) {
+        // 先找到k位置
+        int l = 0, r = nums.length-1;
+        while(l <= r){
+            int mid = l + ((r - l) >> 1);
+            if(nums[mid] == target){
+                return mid;
+            }
+            // 往左找还是往右找
+            if(nums[mid] > target){
+                r = mid - 1;
+            }else{
+                l = mid + 1;
+            }
+        }
+        return -1;
+    }
+
     public static void main(String[] args) {
-//        findContinuousSequence1(9);
-//        int a = myAtoi("   -42");
-//        System.out.println(a);
-//        int[][] arr = {{2,1,1},{1,1,0},{0,1,1}};
-//        System.out.println(orangesRotting(arr));
-//        findMedianSortedArrays(new int[]{1,3,4},new int[]{1,3,4,5,7});
-
-//        distributeCandies(60,4);
-//        System.out.println(maxSub("abccabdc"));
-//        sortedSquares(new int[]{-4,-1,0,3,10});
-        /*int[] ints = new LeetCode().twoSum(new int[]{3,3}, 6);
-        for (int i:ints) {
-            System.out.println(i);
-        }*/
-
-        /*Integer a = null;
-        System.out.println(a == null);
-        System.out.println(maxSub("acdefasc"));
-
-
-
-        int[] ints1 = selectionSort(new int[]{4, 3, 5, 2, 1, 10, 9, 2, 6, 7, 8, 9, 5});
-        for (int i:ints1) {
-            System.out.print(i+",");
+        Map<Integer, Integer> map = new HashMap<>();
+        Set<Map.Entry<Integer, Integer>> entries = map.entrySet();
+        for (Map.Entry e: entries
+             ) {
+            System.out.println(e.getKey());
         }
-
-        int[] ints = mergeSort(new int[]{4, 3});
-//        mergeSort(new int[]{4, 3, 5, 2, 1, 10, 9, 2, 6, 7, 8, 9, 5});
-        for (int i:ints) {
-            System.out.print(i+"、");
-        }
-
-        BigDecimal bd = new BigDecimal("80.88");
-        System.out.println(bd.divide(new BigDecimal(2)));*/
-
-     /*   int[] arrs = {9, 3, 7, 6, 10, 23, 12};
-        int[] ints = quickSort(arrs, 0, arrs.length - 1);
-        for (int i = 0; i < arrs.length; i++) {
-            System.out.println(arrs[i]);
-        }*/
-//        System.out.println(largestPerimeter(new int[]{2,1,2}));
-
-        String[] jobParam = new String[3];
-        for (int i = 0; i < jobParam.length; i++) {
-            System.out.println(jobParam[i]);
-        }
-
-        System.out.println(DateUtil.format(DateUtil.parse("2020-11-26","yyyy-MM-dd"),DatePattern.NORM_DATETIME_PATTERN));
-
-
-        Date endDate = new Date();
-        DateTime startDate = DateUtil.offsetMonth(endDate, -12);
-        String startDateStr = DateUtil.format(startDate, DatePattern.NORM_DATETIME_PATTERN);
-        String endDateStr = DateUtil.format(endDate, DatePattern.NORM_DATETIME_PATTERN);
-        System.out.println(String.format("startDate [{%s}]  endDate [{%s}]", startDateStr, endDateStr));
-//        Integer[] scan = scan("[[1,1],2,[1,1]]");
-//        System.out.println(scan.toString());
-        String a = "1,2, ";
-        String[] split = a.split(",");
-        Integer.valueOf(split[2]);
-        System.out.println(split.length);
+        System.out.println((false || true) && (false || true));
+//        int[] test1 = {1,3};
+//        int ress = search(test1, 1);
+//        System.out.println(ress);
+//
+//        System.out.println(findKthNumber(1,1));
+//
+//        AllOne obj = new AllOne();
+//        obj.inc("a");
+//        obj.inc("b");
+//        obj.inc("b");
+//        obj.inc("c");
+//        obj.inc("c");
+//        obj.inc("c");
+//        obj.dec("b");
+//        obj.dec("b");
+//        System.out.println(obj.getMinKey());
+//        obj.dec("a");
+//        System.out.println(obj.getMaxKey());
+//        System.out.println(obj.getMinKey());
+//        int[] sub = new int[]{-2,1,-3,4,-1,2,1,-5,4};
+//        int i = maxSubArray(sub);
+//        System.out.println(i);
+//        int s = longestValidParentheses(")()())");
+//        System.out.println(s);
+//
+//        boolean valid = isValid("({[]})");
+//        System.out.println(valid);
+////        List<String> strings = letterCombinations("999");
+////        System.out.println(strings);
+//        System.out.println("()".contains("()"));
+//        System.out.println("()())(".contains("()"));
+//
+////        String[] testa = {"Shogun","Tapioca Express","Burger King","KFC"};
+////        String[] testB = {"Piatti","The Grill at Torrey Pines","Hungry Hunter Steakhouse","Shogun"};
+////        String[] restaurant = findRestaurant(testa, testB);
+////        System.out.println(restaurant);
+//        System.out.println(3 ^ 0);
+//        System.out.println(3 ^ 1);
+//
+//        Queue<ListNode> q = new LinkedList<>();
+//        q.poll();
+//
+//        ListNode a = new ListNode(1);
+//        ListNode b = new ListNode(2);
+//        ListNode c = new ListNode(3);
+//        ListNode d = new ListNode(4);
+//        ListNode e = new ListNode(5);
+//        a.next = b;
+//        ArrayList<Integer> integers = Lists.newArrayList(1);
+//        integers.remove(integers.size()-1);
+//        int[][] arr = new int[1][1];
+////        a.next.next = c;
+////        a.next.next.next =d;
+////        a.next.next.next.next = e;
+//        ListNode listNode = reverseKGroup(a, 2);
+//        System.out.println(listNode);
+//        ArrayList<String> a1 = Lists.newArrayList("a");
+//        a1.toArray(new String[a1.size()]);
+//
+//
+////        ArrayList<String> strings = Lists.newArrayList("a", "b");
+////        List<String> b1 = new ArrayList<>();
+////        System.out.println(strings.containsAll(b1));
+////        String s = "|||||*|||*|||*||||*||||**|*|||**|**||**|||*|||*||***||*|*||";
+////        int[][] arr = {{6,57}};
+////        System.out.println(platesBetweenCandles(s, arr)[0]);
+////        System.out.println(s.contains("|"));
+//
+//        long right =1L * 10000000 * 10000;
+//        long left = 10000000 * 10000 * 1L;
+//        System.out.println(right);
+//        System.out.println(left);
+//        System.out.println(right == left);
+////        int[] t = {1,2,3};
+////        long l = minimumTime(t, 5);
+////        System.out.println(l);
+////        long l = subArrayRanges(t);
+////        System.out.println(l);
+////        System.out.println(3<<0);
+////        System.out.println(nearestPalindromic1("123"));
+////        System.out.println(nearestPalindromic("123"));
+////        Solution1.ListNode b = new Solution1.ListNode(1);
+////        Solution1.ListNode[] arr = new Solution1.ListNode[]{null,b};
+////        System.out.println(Solution1.mergeKLists(arr));
+//
+//
+//
+//
+////        int[] a3 = {1,1,-1};
+////        System.out.println(threeSumClosest(a3,2));
+////
+////        int[] a1 = {-5,-1,-2,-4,4};
+////        System.out.println(findThreeMutilMax(a1));
+////        Solution s = new Solution();
+////        int[][] a = {{1,0,7},{2,0,6},{3,4,5},{0,3,0},{9,0,20}};
+////        System.out.println(s.getMaximumGold(a));
+////        int[][] a = {{5,8},{3,9},{5,12},{16,5}};
+////        System.out.println(countGoodRectangles(a));
+////        System.out.println(reversePrefix("abcd",'z'));
+////        System.out.println(longestNiceSubstring("abASs"));
+////        System.out.println(complexNumberMultiply("1+-1i",
+////                "1+-1i"));
+////        int[][] a = {{1,1,1,1,1,1},{-1,-1,-1,-1,-1,-1},{1,1,1,1,1,1},{-1,-1,-1,-1,-1,-1}};
+////        int[][] a = {{1,1,1,-1,-1},{1,1,1,-1,-1},{-1,-1,-1,1,1},{1,1,1,1,-1},{-1,-1,-1,-1,-1}};
+////        int[] ball = findBall(a);
+////        System.out.println(ball);
+////        System.out.println('A' - 'a');
+//        System.out.println(reverseOnlyLetters("ab-cd"));
+////
+////        System.out.println(isPalindrome(121));
+////        System.out.println(reverse(-2147483412));
+////        System.out.println(findMedianSortedArrays1(new int[]{1,2}, new int[]{3,4}));
+//////        findContinuousSequence1(9);
+//////        int a = myAtoi("   -42");
+//////        System.out.println(a);
+//////        int[][] arr = {{2,1,1},{1,1,0},{0,1,1}};
+//////        System.out.println(orangesRotting(arr));
+//////        findMedianSortedArrays(new int[]{1,3,4},new int[]{1,3,4,5,7});
+////
+//////        distributeCandies(60,4);
+//////        System.out.println(maxSub("abccabdc"));
+//////        sortedSquares(new int[]{-4,-1,0,3,10});
+////        /*int[] ints = new LeetCode().twoSum(new int[]{3,3}, 6);
+////        for (int i:ints) {
+////            System.out.println(i);
+////        }*/
+////
+////        /*Integer a = null;
+////        System.out.println(a == null);
+////        System.out.println(maxSub("acdefasc"));
+////
+////
+////
+////        int[] ints1 = selectionSort(new int[]{4, 3, 5, 2, 1, 10, 9, 2, 6, 7, 8, 9, 5});
+////        for (int i:ints1) {
+////            System.out.print(i+",");
+////        }
+////
+////        int[] ints = mergeSort(new int[]{4, 3});
+//////        mergeSort(new int[]{4, 3, 5, 2, 1, 10, 9, 2, 6, 7, 8, 9, 5});
+////        for (int i:ints) {
+////            System.out.print(i+"、");
+////        }
+////
+////        BigDecimal bd = new BigDecimal("80.88");
+////        System.out.println(bd.divide(new BigDecimal(2)));*/
+////
+////     /*   int[] arrs = {9, 3, 7, 6, 10, 23, 12};
+////        int[] ints = quickSort(arrs, 0, arrs.length - 1);
+////        for (int i = 0; i < arrs.length; i++) {
+////            System.out.println(arrs[i]);
+////        }*/
+//////        System.out.println(largestPerimeter(new int[]{2,1,2}));
+////
+////        String[] jobParam = new String[3];
+////        for (int i = 0; i < jobParam.length; i++) {
+////            System.out.println(jobParam[i]);
+////        }
+////
+////        System.out.println(DateUtil.format(DateUtil.parse("2020-11-26","yyyy-MM-dd"),DatePattern.NORM_DATETIME_PATTERN));
+////
+////
+////        Date endDate = new Date();
+////        DateTime startDate = DateUtil.offsetMonth(endDate, -12);
+////        String startDateStr = DateUtil.format(startDate, DatePattern.NORM_DATETIME_PATTERN);
+////        String endDateStr = DateUtil.format(endDate, DatePattern.NORM_DATETIME_PATTERN);
+////        System.out.println(String.format("startDate [{%s}]  endDate [{%s}]", startDateStr, endDateStr));
+//////        Integer[] scan = scan("[[1,1],2,[1,1]]");
+//////        System.out.println(scan.toString());
+////        String a = "1,2, ";
+////        String[] split = a.split(",");
+////        Integer.valueOf(split[2]);
+////        System.out.println(split.length);
     }
 
 
