@@ -9,7 +9,8 @@ package leetCode;
 public class LongestFile {
 
     public static void main(String[] args) {
-        System.out.println("\t".length());
+        String cateCode = "LINK_BTN_1";
+        System.out.println(cateCode.substring(0, cateCode.lastIndexOf("_")));
         LongestFile longestFile = new LongestFile();
         System.out.println(longestFile.lengthLongestPath("dir\n\tsubdir1\n\tsubdir2\n\t\tfile.ext"));
     }
