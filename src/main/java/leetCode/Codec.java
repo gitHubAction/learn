@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Queue;
 
 /**
- * @author zhangshihao01
+ * @author zhangshihao01  minimum
  * @version 1.0
  * @description 449. 序列化和反序列化二叉搜索树
- * @date 2022/5/11 9:53
+ * @date 2022/5/11 9:53   Columnar results
  */
 public class Codec {
 
