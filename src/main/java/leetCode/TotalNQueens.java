@@ -36,15 +36,15 @@ public class TotalNQueens {
             return 1;
         }
         int res = 0;
-        // 计算出当前行可以摆法的位置
+        // 计算出当前行可以摆方的所有位置
         int loc =  limit & (~(colLimit | leftLimit | rightLimit));
         int cur = 0;
         // 枚举当前行所有可以摆放的位置
         while(loc != 0){
             // 提取位置信息
             cur = loc & ((~loc) + 1);
-//            loc = loc ^ cur;
             // 去掉cur摆放的位置
+//            loc = loc ^ cur;
             loc = loc - cur;
             // 递归下一行
             res += fastProcess(

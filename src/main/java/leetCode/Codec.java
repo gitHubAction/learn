@@ -14,6 +14,12 @@ import java.util.Queue;
 public class Codec {
 
     public static void main(String[] args) {
+
+        String[] split = "冠寓|天街服务".split("\\|");
+        System.out.println(split[split.length-1]);
+        System.out.println("=====================");
+
+
         TreeNode root = new TreeNode(2);
         root.left = new TreeNode(1);
         root.right = new TreeNode(3);

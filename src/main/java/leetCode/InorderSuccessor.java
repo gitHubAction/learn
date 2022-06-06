@@ -1,5 +1,10 @@
 package leetCode;
 
+import cn.hutool.core.codec.Base64;
+import cn.hutool.crypto.symmetric.AES;
+
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -12,7 +17,7 @@ import java.util.Queue;
  */
 public class InorderSuccessor {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws UnsupportedEncodingException {
         TreeNode root = new TreeNode(2);
         TreeNode left = new TreeNode(1);
         TreeNode right = new TreeNode(3);
@@ -21,6 +26,9 @@ public class InorderSuccessor {
         InorderSuccessor i = new InorderSuccessor();
         TreeNode res = i.inorderSuccessor(root, left);
         System.out.println(res.val);
+
+        AES aes = new AES("RuXYXSGO8eHKC9Cs".getBytes());
+        System.out.println(aes.encryptBase64("abcdefghijklmn"));
 
     }
 
