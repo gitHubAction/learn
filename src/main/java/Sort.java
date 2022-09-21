@@ -1,3 +1,8 @@
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONConfig;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
+
 import java.util.Arrays;
 
 /**
@@ -10,6 +15,18 @@ public class Sort {
 
 
     public static void main(String[] args) {
+        JSONObject json1 = JSONUtil.createObj(JSONConfig.create().setOrder(true))
+                .set("aKey", "value1")
+                .set("bJob", "value2")
+                .set("cGood", "value3")
+                .set("d", true);
+
+// {"a_key":"value1","b_job":"value2","c_good":"value3","d":true}
+        final String s = json1.toJSONString(0, (pair) -> {
+            pair.setKey(StrUtil.toUnderlineCase(pair.getKey()));
+            return true;
+        });
+        System.out.println(s);
         /*int[] ints1 = {3,6,7};
         int[] ints2 = {1,2,5};
         int[] ints = merge(ints1,ints2);
@@ -18,6 +35,16 @@ public class Sort {
         }*/
 //        System.out.println(null == Integer.valueOf(1) );
         System.out.println("   32   ".trim());
+        int[] ints2 = {3,5,6,1,2,4};
+        for(int i = 0; i <ints2.length; i++){
+            int cur = ints2[i], preIndex = i-1;
+            while(preIndex >= 0 && cur > ints2[preIndex]){
+                ints2[preIndex+1] = ints2[preIndex];
+                preIndex--;
+            }
+            ints2[preIndex+1] = cur;
+        }
+        int[] res = insertSort(ints2);
     }
 
     public static int[] bubleSort(int[] arr){
@@ -38,8 +65,8 @@ public class Sort {
     public static int[] insertSort(int[] arr){
         if(arr == null || arr.length < 2)return arr;
         for (int i = 0; i < arr.length; i++) {
-            int cur = arr[i+1];
-            int preIndex = i;
+            int cur = arr[i];
+            int preIndex = i-1;
 
             while (preIndex >= 0 && cur < arr[preIndex]){
                 arr[preIndex+1] = arr[preIndex];

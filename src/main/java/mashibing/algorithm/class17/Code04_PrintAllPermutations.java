@@ -26,8 +26,7 @@ public class Code04_PrintAllPermutations {
 		} else {
 			int N = rest.size();
 			for (int i = 0; i < N; i++) {
-				char cur = rest.get(i);
-				rest.remove(i);
+				char cur = rest.remove(i);
 				f(rest, path + cur, ans);
 				rest.add(i, cur);
 			}

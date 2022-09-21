@@ -1,6 +1,19 @@
 package juc;
 
+import JUC.CompletableFutureUtil;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
+import com.google.common.collect.Lists;
+import structs.linkedList.ListNode;
+
+import java.time.Duration;
+import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * ClassName:    JUCTest
@@ -81,11 +94,72 @@ public class JUCTest {
     }
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        ExecutorService executorService = Executors.newFixedThreadPool(5);
-        for (int i = 0; i < 10; i++) {
-            final int j = i;
-            executorService.submit(() -> j);
+        /*System.out.println(Integer.MAX_VALUE);
+        System.out.println(Long.MAX_VALUE);
+        JUCTest juc = new JUCTest();
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        CompletableFuture<String> resultA = CompletableFutureUtil.exec(
+                CompletableFuture.supplyAsync(() -> juc.getA(),executorService )
+                , Duration.ofSeconds(10),TimeUnit.SECONDS);
+
+        CompletableFuture<String> resultB = CompletableFutureUtil.exec(
+                CompletableFuture.supplyAsync(() -> juc.getB(), executorService)
+                , Duration.ofSeconds(1),TimeUnit.SECONDS).exceptionally(e->{
+            System.out.println("异常。。。。。。。。。。。");
+                    e.printStackTrace();
+                    return null;
+                });
+        CompletableFuture.allOf(resultA, resultB);
+        String s = resultA.get();
+        System.out.println(s);
+        String b = resultB.get();
+        System.out.println(b);*/
+        System.out.println(Long.MIN_VALUE * 60);
+
+        System.out.println(new StringJoiner(":","{","}").add("appCode").add("areaCode").add("carrierCode").toString());
+    }
+
+    public static int reverse(int x) {
+        if(x == 0 || x < Integer.MIN_VALUE || x > Integer.MAX_VALUE){
+            return 0;
         }
+        StringBuilder sb = new StringBuilder();
+        if(x < 0){
+            sb.append("-");
+            x = 0 - x;
+        }
+        while(x != 0){
+            sb.append(x % 10);
+            x = x / 10;
+        }
+        if(x != 0){
+            sb.append(x);
+        }
+        String res = sb.toString();
+        long l = Long.parseLong(res);
+        if(l > Integer.MAX_VALUE || l < Integer.MIN_VALUE){
+            return 0;
+        }
+        return Integer.parseInt(res);
+    }
+
+    public String getA(){
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("5s返回A");
+        return "A";
+    }
+
+    public String getB(){
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return "B";
     }
 
 }

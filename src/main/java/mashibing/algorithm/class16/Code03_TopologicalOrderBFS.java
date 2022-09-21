@@ -27,7 +27,7 @@ public class Code03_TopologicalOrderBFS {
 		}
 		for (DirectedGraphNode cur : graph) {
 			for (DirectedGraphNode next : cur.neighbors) {
-				indegreeMap.put(next, indegreeMap.get(next) + 1);
+				indegreeMap.put(next, indegreeMap.getOrDefault(next,0) + 1);
 			}
 		}
 		Queue<DirectedGraphNode> zeroQueue = new LinkedList<>();

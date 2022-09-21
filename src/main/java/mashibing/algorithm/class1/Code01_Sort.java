@@ -9,11 +9,9 @@ package mashibing.algorithm.class1;
  */
 public class Code01_Sort {
 
-
     public static void main(String[] args) {
 
     }
-
 
     public static void insertionSort(int[] arr){
         if(arr.length < 2)return;
