@@ -13,13 +13,25 @@ import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.action.search.SearchAction;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchRequestBuilder;
+import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -41,9 +53,70 @@ public class EsClient {
         );
     }
 
-        public static void main(String[] args) {
-                bulkInsert();
+    public static Connection getCon() throws Exception {
+        Connection con = null;
+        Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+        // mysql驱动
+        return (Connection) DriverManager.getConnection("jdbc:mysql://10.31.117.95:3306/ADSStageBusiness?serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull",
+                "adsstageuser", "1lh2ytfeikdv6rRa");
+    }
+
+    public static void main(String[] args) throws Exception {
+        try(RestHighLevelClient client =getClient()){
+            SearchRequest request = new SearchRequest();
+            SearchSourceBuilder sourceBuilder = SearchSourceBuilder.searchSource();
+            sourceBuilder.fetchSource(true).query(QueryBuilders.boolQuery().must(QueryBuilders.termQuery("projectId","480048164093919232"))).from(0).size(10000);
+            request.indices("logstash-lhkf-project").source(sourceBuilder);
+            SearchResponse resp = client.search(request);
+            SearchHit hit = resp.getHits().getHits()[0];
+            System.out.println(hit.getSourceAsString());
         }
+//            bulkInsert();
+    }
+
+
+    public static void transfer(){
+        RestHighLevelClient client = null;
+        Connection con = null;
+        try {
+
+            client = getClient();
+            SearchRequest request = new SearchRequest();
+            SearchSourceBuilder sourceBuilder = SearchSourceBuilder.searchSource();
+            sourceBuilder.fetchSource(true).query(QueryBuilders.matchAllQuery()).from(0).size(10000);
+            request.indices("lhkf-project").source(sourceBuilder);
+            SearchResponse resp = client.search(request);
+            con = getCon();
+            SearchHit[] hits = resp.getHits().getHits();
+            for (SearchHit hit : hits) {
+                System.out.println(hit.getId() + ","+hit.getSourceAsString());
+                try {
+                    Statement statement = con.createStatement();
+                    boolean execute = statement.execute("insert into es_project (id,json) values (\'" + hit.getId() + "\',\'" + hit.getSourceAsString() + "\')");
+                    System.out.println(execute);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }catch (Exception e){
+
+        }finally {
+            if(client != null){
+                try {
+                    client.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(con != null){
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
     public static void bulkInsert(){
         try(RestHighLevelClient client = getClient();){
