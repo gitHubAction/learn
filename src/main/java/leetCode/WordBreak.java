@@ -42,8 +42,31 @@ public class WordBreak {
         wb.wordBreak("catsandog", Arrays.asList("cats", "dog", "sand", "and", "cat"));
         System.out.println(wb.wordBreakDFS("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab"
                 , Arrays.asList("a","aa","aaa","aaaa","aaaaa","aaaaaa","aaaaaaa","aaaaaaaa","aaaaaaaaa","aaaaaaaaaa")));
+
+
+        wb.wordbreakdfs("a",Arrays.asList("aaaaaaaaaa","aaa"));
     }
 
+    public boolean wordbreakdfs(String s, List<String> wordDict){
+        boolean[] mem = new boolean[s.length()];
+        return breakdfs(0,s,wordDict,mem);
+    }
+
+    private boolean breakdfs(int i, String s, List<String> wordDict, boolean[] mem) {
+        for (String word : wordDict) {
+            int next = i + word.length();
+            if(next > s.length() || mem[next]){
+                continue;
+            }
+            if(word.equals(s.substring(i,next))){
+                if(next == s.length() || breakdfs(next,s,wordDict,mem)){
+                    return true;
+                }
+                mem[next] = true;
+            }
+        }
+        return false;
+    }
 
     public boolean wordBreakDFS(String s, List<String> wordDict){
         Boolean[] mem = new Boolean[s.length()];

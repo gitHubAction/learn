@@ -1243,14 +1243,14 @@ public class LeetCode {
 //        System.out.println(3 ^ 0);
 //        System.out.println(3 ^ 1);
 //
-//        Queue<ListNode> q = new LinkedList<>();
+//        Queue<Node> q = new LinkedList<>();
 //        q.poll();
 //
-//        ListNode a = new ListNode(1);
-//        ListNode b = new ListNode(2);
-//        ListNode c = new ListNode(3);
-//        ListNode d = new ListNode(4);
-//        ListNode e = new ListNode(5);
+//        Node a = new Node(1);
+//        Node b = new Node(2);
+//        Node c = new Node(3);
+//        Node d = new Node(4);
+//        Node e = new Node(5);
 //        a.next = b;
 //        ArrayList<Integer> integers = Lists.newArrayList(1);
 //        integers.remove(integers.size()-1);
@@ -1258,7 +1258,7 @@ public class LeetCode {
 ////        a.next.next = c;
 ////        a.next.next.next =d;
 ////        a.next.next.next.next = e;
-//        ListNode listNode = reverseKGroup(a, 2);
+//        Node listNode = reverseKGroup(a, 2);
 //        System.out.println(listNode);
 //        ArrayList<String> a1 = Lists.newArrayList("a");
 //        a1.toArray(new String[a1.size()]);
@@ -1285,8 +1285,8 @@ public class LeetCode {
 ////        System.out.println(3<<0);
 ////        System.out.println(nearestPalindromic1("123"));
 ////        System.out.println(nearestPalindromic("123"));
-////        Solution1.ListNode b = new Solution1.ListNode(1);
-////        Solution1.ListNode[] arr = new Solution1.ListNode[]{null,b};
+////        Solution1.Node b = new Solution1.Node(1);
+////        Solution1.Node[] arr = new Solution1.Node[]{null,b};
 ////        System.out.println(Solution1.mergeKLists(arr));
 //
 //
