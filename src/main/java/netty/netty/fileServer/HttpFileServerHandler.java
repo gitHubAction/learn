@@ -1,4 +1,4 @@
-package netty.fileServer;
+package netty.netty.fileServer;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -15,9 +15,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.regex.Pattern;
 
-import static io.netty.handler.codec.http.HttpHeaderNames.*;
-import static io.netty.handler.codec.http.HttpUtil.isKeepAlive;
-import static io.netty.handler.codec.http.HttpUtil.setContentLength;
+import static io.netty.handler.codec.http.HttpHeaders.Names.*;
+import static io.netty.handler.codec.http.HttpHeaders.Values.KEEP_ALIVE;
+import static io.netty.handler.codec.http.HttpHeaders.isKeepAlive;
 
 /**
  * @Author: zhangsh
@@ -93,15 +93,14 @@ public class HttpFileServerHandler extends SimpleChannelInboundHandler<FullHttpR
             sendError(ctx,HttpResponseStatus.NOT_FOUND);
             return;
         }
-
         long length = accessFile.length();
 
-        HttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
+        HttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
         //设置响应头
         setContentLength(response,length);
         setContentTypeHeader(response,file);
-        if(HttpHeaders.isKeepAlive(request)){
-            response.headers().set(HttpHeaderNames.CONNECTION,HttpHeaderValues.KEEP_ALIVE);
+        if(isKeepAlive(request)){
+            response.headers().set(CONNECTION,KEEP_ALIVE);
         }
         ctx.write(response);
         ChannelFuture sendFileFuture;
@@ -134,7 +133,7 @@ public class HttpFileServerHandler extends SimpleChannelInboundHandler<FullHttpR
         ChannelFuture lastContentFuture=ctx.
                 writeAndFlush(LastHttpContent.EMPTY_LAST_CONTENT);
         //如果是非keepAlive的，最后一包消息发送完成后，服务端要主动断开连接
-        if(!HttpHeaders.isKeepAlive(request)) {
+        if(!isKeepAlive(request)) {
             lastContentFuture.addListener(ChannelFutureListener.CLOSE);
         }
     }

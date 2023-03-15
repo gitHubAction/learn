@@ -14,12 +14,16 @@ public class FluxContext {
     public static void main(String[] args) {
         String key = "message";
         Mono<String> mo = Mono.just("hello")
-                .contextWrite(ctx -> ctx.put(key, "world"))
                 .flatMap(s ->
 //                    Mono.subscriberContext().map(ctx -> s + " " + ctx.getOrDefault(key, "Reactor"))
-                    Mono.deferContextual(ctx -> Mono.just(s + " " + ctx.getOrDefault(key, "Reactor")))
-                );
+                    Mono.deferContextual(ctx -> {
+                        String reactor = ctx.getOrDefault(key, "reactor");
+                        System.out.println(reactor);
+                        return Mono.just(s + " " + ctx.getOrDefault(key, "Reactor"));
+                    })
+                )
+                .contextWrite(ctx -> ctx.put(key, "world"));
 
-        StepVerifier.create(mo).expectNext("hello Reactor").verifyComplete();
+        StepVerifier.create(mo).expectNext("hello world").verifyComplete();
     }
 }

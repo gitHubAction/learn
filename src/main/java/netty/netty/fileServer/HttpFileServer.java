@@ -1,19 +1,16 @@
-package netty.fileServer;
+package netty.netty.fileServer;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelPipeline;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.ServerSocketChannel;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.http.HttpObjectAggregator;
-import io.netty.handler.codec.http.HttpRequestDecoder;
-import io.netty.handler.codec.http.HttpRequestEncoder;
-import io.netty.handler.codec.http.HttpResponseDecoder;
+import io.netty.handler.codec.http.*;
 import io.netty.handler.stream.ChunkedWriteHandler;
-
-import java.net.InetSocketAddress;
 
 /**
  * @Author: zhangsh
@@ -49,6 +46,13 @@ public class HttpFileServer {
             bootstrap.group(parent,work)
                     .channel(NioServerSocketChannel.class)
                     .option(ChannelOption.SO_KEEPALIVE,true)
+//                    .childHandler(new ChannelInitializer<ServerSocketChannel>() {
+//                        @Override
+//                        protected void initChannel(ServerSocketChannel ch) throws Exception {
+//                            ChannelPipeline pipeline = ch.pipeline();
+//                            pipeline.addLast();
+//                        }
+//                    })
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
@@ -59,7 +63,7 @@ public class HttpFileServer {
                             ch.pipeline().addLast("http-aggregator"
                                     ,new HttpObjectAggregator(65536));
                             ch.pipeline().addLast("http-encoder"
-                                    ,new HttpResponseDecoder());
+                                    ,new HttpResponseEncoder());
                             //支持异步大文件流，不会抛出oom
                             ch.pipeline().addLast("http-chunked"
                                     ,new ChunkedWriteHandler());

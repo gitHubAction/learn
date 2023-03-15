@@ -1,4 +1,4 @@
-package netty.server;
+package netty.netty.server;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.Unpooled;
@@ -11,7 +11,6 @@ import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
 
 import java.net.InetSocketAddress;
-import java.nio.charset.Charset;
 
 /**
  * @Author: zhangsh   Embedded

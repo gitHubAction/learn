@@ -1,5 +1,12 @@
 package reactor;
 
+//import org.reactivestreams.Publisher;
+//import reactor.core.publisher.Flux;
+//
+//import java.util.Arrays;
+//import java.util.concurrent.atomic.AtomicInteger;
+//import java.util.function.Function;
+
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 
@@ -31,27 +38,28 @@ public class RePackageFlux {
         AtomicInteger a = new AtomicInteger();
         Function<Flux<String>,Publisher<String>> function = f->{
             if(a.getAndIncrement() == 1){
-                return f.filter(color->!color.equals("blue")).map(String::toUpperCase);
+                return f.filter(color->!color.equals("blue")).map(t->a.get()+ t.toUpperCase());
             }
-            return f.filter(color->!color.equals("red")).map(String::toUpperCase);
+            return f.filter(color->!color.equals("red")).map(t->a.get()+ t.toUpperCase());
         };
         Flux<String> transform = Flux.fromIterable(Arrays.asList("blue", "orange", "red"))
-                .doOnNext(System.out::println);
-//                .compose(function);
+                .doOnNext(System.out::println)
+                .transformDeferred(function);
         transform
                 .subscribe(d-> System.out.println("Compose1111111Subscriber to Compose MapFilter: " +d ));
 
         transform
                 .subscribe(d-> System.out.println("Compose2222222Subscriber to Compose MapFilter: " +d ));
+
     }
 
     private static void transfer() {
         AtomicInteger a = new AtomicInteger();
-        Function<Flux<String>,Publisher<String>> function = f->{
+        Function<Flux<String>, Publisher<String>> function = f->{
             if(a.getAndIncrement() == 1){
-                return f.filter(color->!color.equals("blue")).map(String::toUpperCase);
+                return f.filter(color->!color.equals("blue")).map(t->a.get()+ t.toUpperCase());
             }
-            return f.filter(color->!color.equals("red")).map(String::toUpperCase);
+            return f.filter(color->!color.equals("red")).map(t->a.get()+ t.toUpperCase());
         };
         Flux<String> transform = Flux.fromIterable(Arrays.asList("blue", "orange", "red"))
                 .doOnNext(System.out::println)

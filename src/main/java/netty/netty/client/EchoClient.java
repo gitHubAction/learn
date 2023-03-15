@@ -1,4 +1,4 @@
-package netty.client;
+package netty.netty.client;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.Unpooled;
@@ -23,7 +23,7 @@ public class EchoClient {
     private final int port;
     private final String host;
 
-    public EchoClient(String host,int port) {
+    public EchoClient(String host, int port) {
         this.port = port;
         this.host = host;
     }

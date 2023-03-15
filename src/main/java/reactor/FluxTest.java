@@ -3,6 +3,7 @@ package reactor;
 import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 import reactor.core.publisher.BaseSubscriber;
 import reactor.core.publisher.Flux;
@@ -22,7 +23,6 @@ import java.util.concurrent.atomic.AtomicLong;
  * @date 2022/7/28 17:27
  */
 public class FluxTest {
-
     public static void main(String[] args) {
 //        Flux<String> seq = Flux.just("foo", "bar", "foobar");
 //        List<String> iterable = Arrays.asList("foo", "bar", "foobar");
