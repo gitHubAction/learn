@@ -1,5 +1,8 @@
 package es;
 
+import cn.hutool.core.date.DateField;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -30,10 +33,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.StringJoiner;
+import java.util.*;
 
 /**
  * @author zhangshihao01
@@ -62,18 +62,29 @@ public class EsClient {
     }
 
     public static void main(String[] args) throws Exception {
-        try(RestHighLevelClient client =getClient()){
-            SearchRequest request = new SearchRequest();
-            SearchSourceBuilder sourceBuilder = SearchSourceBuilder.searchSource();
-            sourceBuilder.fetchSource(true).query(QueryBuilders.boolQuery().must(QueryBuilders.termQuery("projectId","480048164093919232"))).from(0).size(10000);
-            request.indices("logstash-lhkf-project").source(sourceBuilder);
-            SearchResponse resp = client.search(request);
-            SearchHit hit = resp.getHits().getHits()[0];
-            System.out.println(hit.getSourceAsString());
-        }
+//        try(RestHighLevelClient client =getClient()){
+//            SearchRequest request = new SearchRequest();
+//            SearchSourceBuilder sourceBuilder = SearchSourceBuilder.searchSource();
+//            sourceBuilder.fetchSource(true).query(QueryBuilders.boolQuery().must(QueryBuilders.termQuery("projectId","480048164093919232"))).from(0).size(10000);
+//            request.indices("logstash-lhkf-project").source(sourceBuilder);
+//            SearchResponse resp = client.search(request);
+//            SearchHit hit = resp.getHits().getHits()[0];
+//            System.out.println(hit.getSourceAsString());
+//        }
 //            bulkInsert();
+//        List<Integer> integers = Arrays.asList(5601228, 5601622, 5601634, 5601613, 5601624, 5601615, 5601237, 5601238, 5601236, 5601239, 5601242, 5601625, 5601242, 5601616, 5601619, 5601620, 5601627, 5601618, 5601626, 5601617, 5601621, 5601614);
+//        integers.sort(Comparator.reverseOrder());
+//        integers.forEach(System.out::println);
+        for (int i = 0; i <5; i=++i) {
+            System.out.println(i);
+        }
+
     }
 
+    public void a(){
+        int a = 1+2;
+        return;
+    }
 
     public static void transfer(){
         RestHighLevelClient client = null;

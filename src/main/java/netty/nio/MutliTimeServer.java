@@ -1,6 +1,5 @@
 package netty.nio;
 
-import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import org.apache.commons.lang3.StringUtils;
 
@@ -91,7 +90,7 @@ public class MutliTimeServer implements Runnable{
                     String msg = new String(dst, "UTF-8");
                     System.out.println("receive msg from client:" + msg);
                     if("QUERY DATE".equals(msg)){
-                        doWrite(channel, DateUtil.format(new Date(),DatePattern.ISO8601_FORMAT));
+                        doWrite(channel, DateUtil.format(new Date(),"ISO8601_FORMAT"));
                     }
                 }
             }else{

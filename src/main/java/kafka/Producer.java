@@ -20,7 +20,7 @@ import java.util.concurrent.Future;
  * @date 2022/4/7 16:11
  */
 public class Producer {
-    public static String brokers = "master:9092,node02:9092,node03:9092";
+    public static String brokers = "master:9092,node02:9092";
     public static Properties initConf(){
         Properties conf = new Properties();
         conf.setProperty(ProducerConfig.ACKS_CONFIG,"-1");
@@ -50,14 +50,14 @@ public class Producer {
 
     public static void produce() throws ExecutionException, InterruptedException {
         Properties conf = initConf();
-        conf.setProperty(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG, MyInterceptor.class.getName());
+//        conf.setProperty(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG, MyInterceptor.class.getName());
         KafkaProducer producer = new KafkaProducer<String, String>(conf);
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 100000; i++) {
             for (int j = 0; j < 3; j++) {
-                Future<RecordMetadata> future = producer.send(new ProducerRecord("ooxx", "item-" + j, "value-" + i));
+                Future<RecordMetadata> future = producer.send(new ProducerRecord("zsh-items", j+"", "value-" + i));
                 RecordMetadata rm = future.get();
-                System.out.println("topic: ooxx"+ " key: "+ "item-" + j +" partition: "+ rm.partition()+ " offset: "+ rm.offset());
+                System.out.println("topic: zsh-items"+ " key: "+ j +" partition: "+ rm.partition()+ " offset: "+ rm.offset());
             }
         }
     }

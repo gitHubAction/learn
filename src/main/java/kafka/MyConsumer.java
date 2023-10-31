@@ -1,15 +1,17 @@
 package kafka;
 
 import com.google.common.collect.Lists;
-import org.apache.kafka.clients.consumer.*;
+import org.apache.kafka.clients.consumer.Consumer;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
 import java.time.Duration;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Properties;
 
-import static org.apache.kafka.clients.consumer.ConsumerConfig.*;
+import static org.apache.kafka.clients.consumer.ConsumerConfig.AUTO_OFFSET_RESET_CONFIG;
+import static org.apache.kafka.clients.consumer.ConsumerConfig.GROUP_ID_CONFIG;
 
 /**
  * @author zhangshihao01
@@ -44,14 +46,13 @@ public class MyConsumer {
         conf.setProperty(AUTO_OFFSET_RESET_CONFIG,"earliest");
 
         // 消费者组
-        conf.setProperty(GROUP_ID_CONFIG,"group-zsh-4");
+        conf.setProperty(GROUP_ID_CONFIG,"group-zsh-5");
 
         // 拉取批次大小
 //        conf.setProperty(MAX_POLL_RECORDS_CONFIG,"");
 
         return conf;
     }
-
 
     public static void main(String[] args) {
         Properties conf = initConfig();

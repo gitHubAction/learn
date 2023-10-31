@@ -11,6 +11,7 @@ import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 import java.util.Date;
 
+
 /**
  * @author zhangshihao01
  * @version 1.0
@@ -38,7 +39,7 @@ public class ReadCompletionHandler implements CompletionHandler<Integer, ByteBuf
         try {
             String reqMsg = new String(dst, "UTF-8");
             System.out.println("receive from client msg: "+ reqMsg);
-            doWrite(DateUtil.format(new Date(), DatePattern.ISO8601_FORMAT));
+            doWrite(DateUtil.format(new Date(), "ISO8601_FORMAT"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
