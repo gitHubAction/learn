@@ -118,57 +118,58 @@ public class CanJiZhengSearch {
             this.res = res;
         }
     }
-    public static void main(String[] args) {
+
+    public static void main3(String[] args) {
+        ExcelWriter writer = ExcelUtil.getWriter("D:\\名单结构.xlsx");
+        // 跳过写入的行
+        writer.passRows(writer.getRowCount());
         List<Map<String,Object>> resultList = new ArrayList<>();
-        Map<String,Object> p1 = new HashMap<>();
-        Map<String,Object> p2 = new HashMap<>();
-        Map<String,Object> p3 = new HashMap<>();
-        Map<String,Object> p4 = new HashMap<>();
-        Map<String,Object> p5 = new HashMap<>();
-        p1.put("姓名","刘运河");
-        p2.put("姓名","李小强");
-        p3.put("姓名","吕君正");
-        p4.put("姓名","高明哲");
-        p5.put("姓名","谷洪生");
-        p1.put("身份证","410422197509059135");
-        p2.put("身份证","410425197205150051");
-        p3.put("身份证","410425196606020034");
-        p4.put("身份证","410482198304040538");
-        p5.put("身份证","410425197101010054");
-        p1.put("查询结果","系统查无此人！");
-        p2.put("查询结果","系统查无此人！");
-        p3.put("查询结果","系统查无此人！");
-        p4.put("查询结果","系统查无此人！");
-        p5.put("查询结果","系统查无此人！");
-        resultList.add(p1);
-        resultList.add(p2);
-        resultList.add(p3);
-        resultList.add(p4);
-        resultList.add(p5);
+        Map<String,Object> tMap = new HashMap<>();
+        tMap.put("姓名","name");
+        tMap.put("身份证","idcard");
+        tMap.put("查询结果","resJson");
+        resultList.add(tMap);
+        writer.write(resultList, false);
+        writer.close();
+    }
+    public static void main(String[] args) throws InterruptedException {
+        List<Map<String,Object>> resultList = new ArrayList<>();
         ExcelReader reader = ExcelUtil.getReader(new File("D:\\名单.xlsx"));
         List<List<Object>> read = reader.read(1);
-        String code, name, idcard, cjyResStr;
+        String code, idcard = null, name = null, cjyResStr;
         Map<String,Object> formMap = new HashMap<>();
+        int i = 0;
         for (List<Object> rowdata: read) {
-            Map<String,Object> tMap = new HashMap<>();
             name = rowdata.get(0)+"";
             idcard = rowdata.get(1)+"";
-            // 获取验证码
-            String url = "https://2dzcx.cdpf.org.cn/cms/resource/ucode.jpg?time=" + TimeStamp.getCurrentTime().getTime();
-            System.out.println(url);
+
+            if( i < 63 || rowdata.size() == 3){
+                System.out.println(name+"\t"+idcard+"\t"+rowdata.get(2));
+                i++;
+                if("系统查无此人！".equals(rowdata.get(2)+"")
+                        || "此人残疾人证状态为过期！".equals(rowdata.get(2)+"")
+                        || "此人是持证残疾人！".equals(rowdata.get(2)+"")){
+                    continue;
+                }
+            }
+                Map<String,Object> tMap = new HashMap<>();
+            try {
+                // 获取验证码
+                String url = "https://2dzcx.cdpf.org.cn/cms/resource/ucode.jpg?time=" + TimeStamp.getCurrentTime().getTime();
+                System.out.println(url);
 //            ByteArrayInputStream byteIn = new ByteArrayInputStream(HttpRequest.get(url).execute().bodyBytes());
 //            BufferedImage bufferedImage = ImgUtil.read(byteIn);
 //            bufferedImage = process(bufferedImage);
 //            Tesseract tessreact = new Tesseract();
 //            tessreact.setDatapath("E:\\code\\tesseract-main\\tessdata");
 
-            try {
+
                 //username=test&password=1
                 cjyResStr = CanJiZhengSearch.PostPic("lanchunyu","!@#$%^","954126","1004","4",HttpRequest.get(url).execute().bodyBytes());
                 JSONObject cjyRes = JSONUtil.parseObj(cjyResStr);
                 if(!Integer.valueOf(0).equals(cjyRes.getInt("err_no"))){
                     System.out.println(cjyRes.getStr("err_str"));
-                    return;
+                    break;
                 }
                 code = cjyRes.getStr("pic_str");
                 formMap.put("name",name);
@@ -182,13 +183,22 @@ public class CanJiZhengSearch {
                 tMap.put("身份证",idcard);
                 tMap.put("查询结果",resJson.getStr("object"));
                 resultList.add(tMap);
-                Thread.sleep(1000*30);
+                Thread.sleep(1000*20);
             } catch (Exception e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
+                System.out.println(name+"\t"+idcard+"\t"+"异常");
+                tMap.put("姓名",name);
+                tMap.put("身份证",idcard);
+                tMap.put("查询结果","异常");
+                resultList.add(tMap);
+                Thread.sleep(1000*5);
             }
+            i++;
         }
         ExcelWriter writer = ExcelUtil.getWriter("D:\\名单结构.xlsx");
-        writer.write(resultList, true);
+        // 跳过写入的行
+        writer.passRows(writer.getRowCount());
+        writer.write(resultList, false);
         writer.close();
     }
 
