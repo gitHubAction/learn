@@ -30,6 +30,71 @@ import java.util.*;
  * @date 2023/10/31 12:02
  */
 public class CanJiZhengSearch {
+    public static void main(String[] args) throws InterruptedException {
+        List<Map<String,Object>> resultList = new ArrayList<>();
+        ExcelReader reader = ExcelUtil.getReader(new File("D:\\名单.xlsx"));
+        List<Map<String,Object>> read = reader.readAll();
+        String code, idcard = null, name = null, cjyResStr;
+        Map<String,Object> formMap = new HashMap<>();
+        for (Map<String,Object> rowdata: read) {
+            name = rowdata.get("姓名")+"";
+            idcard = rowdata.get("身份证")+"";
+
+            if(rowdata.size() == 3){
+                System.out.println(name+"\t"+idcard+"\t"+rowdata.get("查询结果"));
+                if("系统查无此人！".equals(rowdata.get("查询结果")+"")
+                        || "此人残疾人证状态为过期！".equals(rowdata.get("查询结果")+"")
+                        || "此人是持证残疾人！".equals(rowdata.get("查询结果")+"")){
+                    continue;
+                }
+            }
+            try {
+                // 获取验证码
+                String url = "https://2dzcx.cdpf.org.cn/cms/resource/ucode.jpg?time=" + TimeStamp.getCurrentTime().getTime();
+                System.out.println(url);
+//            ByteArrayInputStream byteIn = new ByteArrayInputStream(HttpRequest.get(url).execute().bodyBytes());
+//            BufferedImage bufferedImage = ImgUtil.read(byteIn);
+//            bufferedImage = process(bufferedImage);
+//            Tesseract tessreact = new Tesseract();
+//            tessreact.setDatapath("E:\\code\\tesseract-main\\tessdata");
+
+
+                //username=test&password=1
+//                int j = 1 /0;
+//                cjyResStr = CanJiZhengSearch.PostPic("lan158369","qwertyu","954129","1004","4",HttpRequest.get(url).execute().bodyBytes());
+                byte[] codeBytes = new byte[120];
+                cjyResStr = CanJiZhengSearch.PostPic("lan158369","qwertyu","954129","1004","4",codeBytes);
+                JSONObject cjyRes = JSONUtil.parseObj(cjyResStr);
+                if(!Integer.valueOf(0).equals(cjyRes.getInt("err_no"))){
+                    System.out.println(cjyRes.getStr("err_str"));
+                    rowdata.put("查询结果",cjyRes.getStr("err_str"));
+                    continue;
+                }
+                code = cjyRes.getStr("pic_str");
+                formMap.put("name",name);
+                formMap.put("idcard",idcard);
+                formMap.put("code",code);
+                System.out.println(name+"\t"+idcard+"\t"+code);
+                String result = HttpUtil.post("https://2dzcx.cdpf.org.cn/cms/addons/check/user", formMap);
+                JSONObject resJson = JSONUtil.parseObj(result);
+                System.out.println(name+"\t"+idcard+"\t"+resJson.getStr("object"));
+                rowdata.put("查询结果",resJson.getStr("object"));;
+                Thread.sleep(1000*10);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                System.out.println(name+"\t"+idcard+"\t"+"异常");
+                rowdata.put("查询结果","异常");
+                Thread.sleep(1000*1);
+            }
+        }
+        reader.close();
+        ExcelWriter writer = ExcelUtil.getWriter(new File("D:\\名单.xlsx"));
+        writer.write(read, true);
+        writer.close();
+    }
+
+
+
     public static BufferedImage process(BufferedImage bin) {
 
         int endX = bin.getWidth();
@@ -80,127 +145,9 @@ public class CanJiZhengSearch {
         }
     }
 
-    static class Person {
-        public String name;
-        public String idcard;
-        public String res;
-
-        @Override
-        public String toString() {
-            return "Person{" +
-                    "name='" + name + '\'' +
-                    ", idcard='" + idcard + '\'' +
-                    ", res='" + res + '\'' +
-                    '}';
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getIdcard() {
-            return idcard;
-        }
-
-        public void setIdcard(String idcard) {
-            this.idcard = idcard;
-        }
-
-        public String getRes() {
-            return res;
-        }
-
-        public void setRes(String res) {
-            this.res = res;
-        }
-    }
-
-    public static void main3(String[] args) {
-        ExcelWriter writer = ExcelUtil.getWriter("D:\\名单结构.xlsx");
-        // 跳过写入的行
-        writer.passRows(writer.getRowCount());
-        List<Map<String,Object>> resultList = new ArrayList<>();
-        Map<String,Object> tMap = new HashMap<>();
-        tMap.put("姓名","name");
-        tMap.put("身份证","idcard");
-        tMap.put("查询结果","resJson");
-        resultList.add(tMap);
-        writer.write(resultList, false);
-        writer.close();
-    }
-    public static void main(String[] args) throws InterruptedException {
-        List<Map<String,Object>> resultList = new ArrayList<>();
-        ExcelReader reader = ExcelUtil.getReader(new File("D:\\名单.xlsx"));
-        List<List<Object>> read = reader.read(1);
-        String code, idcard = null, name = null, cjyResStr;
-        Map<String,Object> formMap = new HashMap<>();
-        int i = 0;
-        for (List<Object> rowdata: read) {
-            name = rowdata.get(0)+"";
-            idcard = rowdata.get(1)+"";
-
-            if( i < 63 || rowdata.size() == 3){
-                System.out.println(name+"\t"+idcard+"\t"+rowdata.get(2));
-                i++;
-                if("系统查无此人！".equals(rowdata.get(2)+"")
-                        || "此人残疾人证状态为过期！".equals(rowdata.get(2)+"")
-                        || "此人是持证残疾人！".equals(rowdata.get(2)+"")){
-                    continue;
-                }
-            }
-                Map<String,Object> tMap = new HashMap<>();
-            try {
-                // 获取验证码
-                String url = "https://2dzcx.cdpf.org.cn/cms/resource/ucode.jpg?time=" + TimeStamp.getCurrentTime().getTime();
-                System.out.println(url);
-//            ByteArrayInputStream byteIn = new ByteArrayInputStream(HttpRequest.get(url).execute().bodyBytes());
-//            BufferedImage bufferedImage = ImgUtil.read(byteIn);
-//            bufferedImage = process(bufferedImage);
-//            Tesseract tessreact = new Tesseract();
-//            tessreact.setDatapath("E:\\code\\tesseract-main\\tessdata");
 
 
-                //username=test&password=1
-                cjyResStr = CanJiZhengSearch.PostPic("lanchunyu","!@#$%^","954126","1004","4",HttpRequest.get(url).execute().bodyBytes());
-                JSONObject cjyRes = JSONUtil.parseObj(cjyResStr);
-                if(!Integer.valueOf(0).equals(cjyRes.getInt("err_no"))){
-                    System.out.println(cjyRes.getStr("err_str"));
-                    break;
-                }
-                code = cjyRes.getStr("pic_str");
-                formMap.put("name",name);
-                formMap.put("idcard",idcard);
-                formMap.put("code",code);
-                System.out.println(name+"\t"+idcard+"\t"+code);
-                String result = HttpUtil.post("https://2dzcx.cdpf.org.cn/cms/addons/check/user", formMap);
-                JSONObject resJson = JSONUtil.parseObj(result);
-                System.out.println(name+"\t"+idcard+"\t"+resJson.getStr("object"));
-                tMap.put("姓名",name);
-                tMap.put("身份证",idcard);
-                tMap.put("查询结果",resJson.getStr("object"));
-                resultList.add(tMap);
-                Thread.sleep(1000*20);
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-                System.out.println(name+"\t"+idcard+"\t"+"异常");
-                tMap.put("姓名",name);
-                tMap.put("身份证",idcard);
-                tMap.put("查询结果","异常");
-                resultList.add(tMap);
-                Thread.sleep(1000*5);
-            }
-            i++;
-        }
-        ExcelWriter writer = ExcelUtil.getWriter("D:\\名单结构.xlsx");
-        // 跳过写入的行
-        writer.passRows(writer.getRowCount());
-        writer.write(resultList, false);
-        writer.close();
-    }
+
 
 
 
