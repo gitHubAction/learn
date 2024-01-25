@@ -1,6 +1,5 @@
 package dzxc;
 
-import cn.hutool.core.img.ImgUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONObject;
@@ -9,7 +8,6 @@ import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 import net.sourceforge.tess4j.Tesseract;
-import net.sourceforge.tess4j.TesseractException;
 import net.sourceforge.tess4j.util.ImageHelper;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.net.ntp.TimeStamp;
@@ -61,9 +59,9 @@ public class CanJiZhengSearch {
 
                 //username=test&password=1
 //                int j = 1 /0;
-//                cjyResStr = CanJiZhengSearch.PostPic("lan158369","qwertyu","954129","1004","4",HttpRequest.get(url).execute().bodyBytes());
-                byte[] codeBytes = new byte[120];
-                cjyResStr = CanJiZhengSearch.PostPic("lan158369","qwertyu","954129","1004","4",codeBytes);
+                cjyResStr = CanJiZhengSearch.PostPic("lanchunyu","!@#$%^","954126","8001","4",HttpRequest.get(url).execute().bodyBytes());
+//                byte[] codeBytes = new byte[120];
+//                cjyResStr = CanJiZhengSearch.PostPic("lan158369","qwertyu","954129","1004","4",codeBytes);
                 JSONObject cjyRes = JSONUtil.parseObj(cjyResStr);
                 if(!Integer.valueOf(0).equals(cjyRes.getInt("err_no"))){
                     System.out.println(cjyRes.getStr("err_str"));
@@ -79,7 +77,7 @@ public class CanJiZhengSearch {
                 JSONObject resJson = JSONUtil.parseObj(result);
                 System.out.println(name+"\t"+idcard+"\t"+resJson.getStr("object"));
                 rowdata.put("查询结果",resJson.getStr("object"));;
-                Thread.sleep(1000*10);
+                Thread.sleep(1000*5);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
                 System.out.println(name+"\t"+idcard+"\t"+"异常");
